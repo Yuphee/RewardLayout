@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.zhangyf.reward.MainActivity">
+
+    <com.zhangyf.reward.RewardLayout
+        android:id="@+id/llgiftcontent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:animateLayoutChanges="true"
+        app:max_gift="3"
+        app:gift_dur="3000"
+        android:orientation="vertical" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:background="@android:color/transparent"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        >
+
+        <TextView
+            android:id="@+id/tvSendone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="礼物1"
+            android:textColor="#333"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/tvSendtwo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/tvSendone"
+            android:gravity="center"
+            android:text="礼物2"
+            android:textColor="#333"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/tvSendthree"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/tvSendtwo"
+            android:gravity="center"
+            android:text="礼物3"
+            android:textColor="#333"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/tvSendfor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/tvSendthree"
+            android:gravity="center"
+            android:text="礼物4"
+            android:textColor="#333"
+            android:textSize="10sp" />
+    </LinearLayout>
+
+</RelativeLayout>
