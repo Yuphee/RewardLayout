@@ -90,6 +90,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void addAnim(final View view) {
+                final TextView textView = (TextView) view.findViewById(R.id.tv_gift_amount);
+                ImageView img = (ImageView) view.findViewById(R.id.iv_gift_img);
                 Animation giftInAnim = rewardLayout.getInAnimation();// 整个giftview动画
                 Animation imgInAnim = rewardLayout.getInAnimation();// 礼物图像动画
                 final RewardLayout.NumAnim comboAnim = new RewardLayout.NumAnim();// 首次连击动画
@@ -112,12 +114,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 imgInAnim.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
-
+                        textView.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        comboAnim.start((TextView) view.findViewById(R.id.tv_gift_amount));
+                        textView.setVisibility(View.VISIBLE);
+                        comboAnim.start(textView);
                     }
 
                     @Override
@@ -126,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 });
                 view.startAnimation(giftInAnim);
-                ((ImageView) view.findViewById(R.id.iv_gift_img)).startAnimation(imgInAnim);
+                img.startAnimation(imgInAnim);
             }
 
             @Override
