@@ -4,7 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipToPadding="true"
     tools:context="com.zhangyf.reward.MainActivity">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/dy_bg"
+        android:scaleType="centerCrop"
+        />
 
     <com.zhangyf.reward.RewardLayout
         android:id="@+id/llgiftcontent"
@@ -17,11 +25,13 @@
         android:orientation="vertical" />
 
     <LinearLayout
+        android:id="@+id/gift_ll1"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="@android:color/transparent"
-        android:orientation="horizontal"
+        android:layout_height="50dp"
+        android:background="@android:color/white"
+        android:layout_above="@+id/gift_ll2"
         android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         >
@@ -34,7 +44,8 @@
             android:layout_centerVertical="true"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="礼物1"
+            android:text="糖果"
+            android:drawableLeft="@mipmap/tg"
             android:textColor="#333"
             android:textSize="10sp" />
 
@@ -46,9 +57,9 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@+id/tvSendone"
+            android:drawableLeft="@mipmap/good"
             android:gravity="center"
-            android:text="礼物2"
+            android:text="666"
             android:textColor="#333"
             android:textSize="10sp" />
 
@@ -60,9 +71,9 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@+id/tvSendtwo"
             android:gravity="center"
-            android:text="礼物3"
+            android:drawableLeft="@mipmap/banana"
+            android:text="小香蕉"
             android:textColor="#333"
             android:textSize="10sp" />
 
@@ -74,11 +85,78 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
-            android:layout_toLeftOf="@+id/tvSendthree"
             android:gravity="center"
-            android:text="礼物4"
+            android:drawableLeft="@mipmap/yw"
+            android:text="鱼丸"
             android:textColor="#333"
             android:textSize="10sp" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/gift_ll2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@android:color/white"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:id="@+id/tvSendfive"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="玫瑰"
+            android:drawableLeft="@mipmap/mg"
+            android:textColor="#333"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/tvSendsix"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:drawableLeft="@mipmap/hj"
+            android:gravity="center"
+            android:text="火箭"
+            android:textColor="#333"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/tvSendseven"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:gravity="center"
+            android:drawableLeft="@mipmap/car"
+            android:text="兰博"
+            android:textColor="#333"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/tvSendeight"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5dp"
+            android:gravity="center"
+            android:drawableLeft="@mipmap/yt"
+            android:text="游艇"
+            android:textColor="#333"
+            android:textSize="10sp" />
+    </LinearLayout>
 </RelativeLayout>
