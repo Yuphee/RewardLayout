@@ -40,20 +40,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         beans = new ArrayList<>();
         bean1 = new BaseGiftBean();
         bean1.setGiftId(1);
-        bean1.setGiftName("礼物1");
-        bean1.setGiftImg(R.mipmap.img_chat_gift_1);
+        bean1.setGiftName("糖果");
+        bean1.setUserName("林喵喵");
+        bean1.setGiftImg(R.mipmap.tg);
         bean2 = new BaseGiftBean();
         bean2.setGiftId(2);
-        bean2.setGiftName("礼物2");
-        bean2.setGiftImg(R.mipmap.img_chat_gift_2);
+        bean2.setGiftName("666");
+        bean2.setUserName("马甲");
+        bean2.setGiftImg(R.mipmap.good);
         bean3 = new BaseGiftBean();
         bean3.setGiftId(3);
-        bean3.setGiftName("礼物3");
-        bean3.setGiftImg(R.mipmap.img_chat_gift_3);
+        bean3.setGiftName("小香蕉");
+        bean3.setUserName("大P神");
+        bean3.setGiftImg(R.mipmap.banana);
         bean4 = new BaseGiftBean();
         bean4.setGiftId(4);
-        bean4.setGiftName("礼物4");
-        bean4.setGiftImg(R.mipmap.img_chat_gift_4);
+        bean4.setGiftName("鱼丸");
+        bean4.setUserName("大枫哥");
+        bean4.setGiftImg(R.mipmap.yw);
         beans.add(bean1);
         beans.add(bean2);
         beans.add(bean3);
@@ -65,10 +69,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public View onInit(View view, BaseGiftBean bean) {
                 ImageView giftImage = (ImageView) view.findViewById(R.id.iv_gift_img);
                 final TextView giftNum = (TextView) view.findViewById(R.id.tv_gift_amount);
+                TextView userName = (TextView) view.findViewById(R.id.tv_user_name);
+                TextView giftName = (TextView) view.findViewById(R.id.tv_gift_name);
 
                 // 初始化数据
                 giftNum.setText("x1");
                 giftImage.setImageResource(bean.getGiftImg());
+                userName.setText(bean.getUserName());
+                giftName.setText("送出 "+bean.getGiftName());
                 return view;
             }
 
@@ -90,6 +98,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void addAnim(final View view) {
+                final TextView textView = (TextView) view.findViewById(R.id.tv_gift_amount);
+                ImageView img = (ImageView) view.findViewById(R.id.iv_gift_img);
                 Animation giftInAnim = rewardLayout.getInAnimation();// 整个giftview动画
                 Animation imgInAnim = rewardLayout.getInAnimation();// 礼物图像动画
                 final RewardLayout.NumAnim comboAnim = new RewardLayout.NumAnim();// 首次连击动画
@@ -112,12 +122,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 imgInAnim.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
-
+                        textView.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        comboAnim.start((TextView) view.findViewById(R.id.tv_gift_amount));
+                        textView.setVisibility(View.VISIBLE);
+                        comboAnim.start(textView);
                     }
 
                     @Override
@@ -126,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
                 });
                 view.startAnimation(giftInAnim);
-                ((ImageView) view.findViewById(R.id.iv_gift_img)).startAnimation(imgInAnim);
+                img.startAnimation(imgInAnim);
             }
 
             @Override

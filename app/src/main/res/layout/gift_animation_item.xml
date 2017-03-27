@@ -8,15 +8,15 @@
     android:orientation="vertical">
 
     <RelativeLayout
-        android:layout_width="220dp"
+        android:layout_width="200dp"
         android:layout_height="64dp"
-        android:layout_marginLeft="6dp">
+        >
 
         <View
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_centerVertical="true"
-            android:background="#252525"/>
+            android:background="@mipmap/gift_bg"/>
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/riv_gift_my_avatar"
@@ -25,19 +25,21 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="3dp"
             android:src="@mipmap/ic_launcher"
-            app:riv_oval="true"/>
+            app:riv_oval="true"
+            android:visibility="gone"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="4dp"
+            android:layout_marginLeft="24dp"
             android:layout_marginTop="5dp"
+            android:gravity="center"
             android:layout_toRightOf="@id/riv_gift_my_avatar"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_gift_name"
+                android:id="@+id/tv_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="送你玫瑰"
@@ -45,14 +47,13 @@
                 android:textSize="13sp"/>
 
             <TextView
-                android:id="@+id/tv_gift_description"
+                android:id="@+id/tv_gift_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="4dp"
                 android:layout_marginTop="5dp"
-                android:text="美丽如你"
-                android:textColor="#c8c8c8"
-                android:textSize="12sp"/>
+                android:text="送出 弱鸡"
+                android:textColor="#fad262"
+                android:textSize="10sp"/>
         </LinearLayout>
 
         <ImageView
@@ -62,8 +63,8 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="25dp"
-            android:src="@mipmap/img_chat_gift_2"/>
+            android:layout_marginRight="40dp"
+            android:src="@mipmap/hj"/>
 
         <TextView
             android:id="@+id/tv_gift_amount"
@@ -71,7 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="15dp"
             android:text="x1"
             android:textColor="#ff9900"
             android:textSize="18sp"/>

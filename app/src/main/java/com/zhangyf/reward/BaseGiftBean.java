@@ -14,6 +14,7 @@ public class BaseGiftBean implements Comparable<BaseGiftBean>{
     private int giftId;
     private String giftName;
     private int giftImg;
+    private String userName;
     /**
      * 礼物计数
      */
@@ -86,6 +87,14 @@ public class BaseGiftBean implements Comparable<BaseGiftBean>{
     public BaseGiftBean setCurrentIndex(int currentIndex) {
         this.currentIndex = currentIndex;
         return this;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     @Override
