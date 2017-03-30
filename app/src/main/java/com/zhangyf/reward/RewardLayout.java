@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -45,6 +46,7 @@ public class RewardLayout extends LinearLayout {
     private int giftItemRes;
     private List<BaseGiftBean> beans;
     private GiftListener initListener;
+    private List<View> giftViewCollection = new ArrayList<View>();
 
     public interface GiftListener{
         View onInit(View view, BaseGiftBean bean);
@@ -117,6 +119,7 @@ public class RewardLayout extends LinearLayout {
     private void init(Context context) {
         mContext = context;
         mActivity = (Activity) mContext;
+        beans = new ArrayList<>();
         clearTiming();
     }
 
@@ -146,17 +149,18 @@ public class RewardLayout extends LinearLayout {
     /**
      * 外部调用方法，添加礼物view到rewardlayout中
      *
-     * @param giftId
+     * @param sBean
      */
-    public void showGift(int giftId) {
+    public void showGift(SendGiftBean sBean) {
         BaseGiftBean bean = null;
         for (BaseGiftBean baseGiftBean : beans) {
-            if(baseGiftBean.getGiftId() == giftId){
+            if(baseGiftBean.getGiftId() == sBean.getGiftId() && baseGiftBean.getUserId() == sBean.getUserId()){
                 bean = baseGiftBean;
             }
         }
         if(bean == null) {
-            throw new IllegalArgumentException("giftid not found u should setGiftBeans first");
+            bean = generateGift(sBean);
+            beans.add(bean);
         }
         BaseGiftBean mBean = null;
         View giftView = findViewWithTag(bean);
@@ -213,6 +217,7 @@ public class RewardLayout extends LinearLayout {
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         view.setLayoutParams(lp);
         return view;
+
     }
 
 
@@ -236,15 +241,56 @@ public class RewardLayout extends LinearLayout {
         giftView.setTag(mBean);
         giftView.setEnabled(true);// 标记该giftview可用
 
-        addChildGift(giftView);
+        addChildGift(giftView);// 如果送礼非常快在add之前再进来一个相同的礼物可能会出现不会叠加而跑到下面的布局中去
         invalidate();
 
         if(initListener != null) {
             initListener.addAnim(giftView);
         }
 
+        // TODO: 根据GiftExistTime 准时小时，不采用timer轮训
+//        final View finalGiftView = giftView;
+//        finalGiftView.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                removeGiftViewAnim(finalGiftView);
+//            }
+//        },mBean.getGiftExistTime());
 
+    }
 
+    private void removeGiftViewAnim(final View view) {
+        if(view != null) {
+            view.setEnabled(false);// 标记该giftview不可用
+            final AnimationSet outAnim = getOutAnimation();
+            outAnim.setFillAfter(true);
+            outAnim.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    new Handler().postDelayed(new Runnable() {
+                        public void run() {
+                            removeChildGift(view);
+                        }
+                    }, 10);
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+            mActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    view.startAnimation(outAnim);
+                }
+            });
+        }
     }
 
     /**
@@ -265,7 +311,7 @@ public class RewardLayout extends LinearLayout {
                 public void onAnimationEnd(Animation animation) {
                     new Handler().postDelayed(new Runnable() {
                         public void run() {
-                            removeChildGift(index);
+                            removeChildGift(removeView);
                         }
                     }, 10);
 
@@ -350,6 +396,29 @@ public class RewardLayout extends LinearLayout {
             ViewGroup vg = (ViewGroup) getChildAt(index);
             if (vg.getChildCount() > 0) {
                 vg.removeViewAt(0);
+            }
+        }
+    }
+
+    /**
+     * 移除指定framelayout下面的礼物view
+     * @param view
+     */
+    private void removeChildGift(View view) {
+        for(int i=0;i<getChildCount();i++) {
+            ViewGroup vg = (ViewGroup)getChildAt(i);
+            final int index = vg.indexOfChild(view);
+            if (index >= 0) {
+                vg.removeView(view);
+                BaseGiftBean bean = (BaseGiftBean)view.getTag();
+                int giftId = bean.getGiftId();
+                int userId = bean.getUserId();
+                for (Iterator<BaseGiftBean> it = beans.iterator(); it.hasNext();) {
+                    BaseGiftBean value = it.next();
+                    if (value.getGiftId() == giftId && value.getUserId() == userId) {
+                        it.remove();
+                    }
+                }
             }
         }
     }
@@ -455,8 +524,22 @@ public class RewardLayout extends LinearLayout {
         giftItemRes = res;
     }
 
-    public void setGiftBeans(List<BaseGiftBean> beans){
-        this.beans = beans;
+
+    public BaseGiftBean generateGift(SendGiftBean sb) {
+        BaseGiftBean bean = new BaseGiftBean();
+        bean.setUserId(sb.getUserId());
+        bean.setGiftId(sb.getGiftId());
+        bean.setUserName(sb.getUserName());
+        int index = 0;
+        for(int i=0;i<GiftConfig.giftCount;i++) {
+            if(GiftConfig.giftIds[i] == sb.getGiftId()){
+                index = i;
+            }
+        }
+        bean.setGiftExistTime(GiftConfig.stayTime[index]);
+        bean.setGiftName(GiftConfig.giftNames[index]);
+        bean.setGiftImg(GiftConfig.giftRes[index]);
+        return bean;
     }
 
     private int getGiftRes() {

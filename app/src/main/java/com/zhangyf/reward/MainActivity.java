@@ -16,12 +16,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView tvSendtwo;
     private TextView tvSendthree;
     private TextView tvSendfor;
+    private TextView tvSendanother;
     private RewardLayout rewardLayout;
-    private BaseGiftBean bean1;
-    private BaseGiftBean bean2;
-    private BaseGiftBean bean3;
-    private BaseGiftBean bean4;
-    private List<BaseGiftBean> beans;
+    private SendGiftBean bean1;
+    private SendGiftBean bean2;
+    private SendGiftBean bean3;
+    private SendGiftBean bean4;
+    private SendGiftBean bean5;
 
 
     @Override
@@ -33,37 +34,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvSendtwo = (TextView)findViewById(R.id.tvSendtwo);
         tvSendthree = (TextView)findViewById(R.id.tvSendthree);
         tvSendfor = (TextView)findViewById(R.id.tvSendfor);
+        tvSendanother = (TextView)findViewById(R.id.tvSendanother);
         tvSendone.setOnClickListener(this);
         tvSendtwo.setOnClickListener(this);
         tvSendthree.setOnClickListener(this);
         tvSendfor.setOnClickListener(this);
-        beans = new ArrayList<>();
-        bean1 = new BaseGiftBean();
-        bean1.setGiftId(1);
-        bean1.setGiftName("糖果");
-        bean1.setUserName("林喵喵");
-        bean1.setGiftImg(R.mipmap.tg);
-        bean2 = new BaseGiftBean();
-        bean2.setGiftId(2);
-        bean2.setGiftName("666");
-        bean2.setUserName("马甲");
-        bean2.setGiftImg(R.mipmap.good);
-        bean3 = new BaseGiftBean();
-        bean3.setGiftId(3);
-        bean3.setGiftName("小香蕉");
-        bean3.setUserName("大P神");
-        bean3.setGiftImg(R.mipmap.banana);
-        bean4 = new BaseGiftBean();
-        bean4.setGiftId(4);
-        bean4.setGiftName("鱼丸");
-        bean4.setUserName("大枫哥");
-        bean4.setGiftImg(R.mipmap.yw);
-        beans.add(bean1);
-        beans.add(bean2);
-        beans.add(bean3);
-        beans.add(bean4);
+        tvSendanother.setOnClickListener(this);
+        bean1 = new SendGiftBean(1,1,"林喵喵");
+        bean2 = new SendGiftBean(2,2,"马甲");
+        bean3 = new SendGiftBean(3,3,"大P神");
+        bean4 = new SendGiftBean(4,4,"大枫哥");
+        bean5 = new SendGiftBean(4,1,"大枫哥");
         rewardLayout.setGiftItemRes(R.layout.gift_animation_item);
-        rewardLayout.setGiftBeans(beans);
         rewardLayout.setInitListener(new RewardLayout.GiftListener() {
             @Override
             public View onInit(View view, BaseGiftBean bean) {
@@ -151,17 +133,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.tvSendone:/*礼物1*/
-                rewardLayout.showGift(1);
+            case R.id.tvSendone:/*礼物1 林喵喵*/
+                rewardLayout.showGift(bean1);
                 break;
-            case R.id.tvSendtwo:/*礼物2*/
-                rewardLayout.showGift(2);
+            case R.id.tvSendtwo:/*礼物2 马甲*/
+                rewardLayout.showGift(bean2);
                 break;
-            case R.id.tvSendthree:/*礼物3*/
-                rewardLayout.showGift(3);
+            case R.id.tvSendthree:/*礼物3 P神*/
+                rewardLayout.showGift(bean3);
                 break;
-            case R.id.tvSendfor:/*礼物4*/
-                rewardLayout.showGift(4);
+            case R.id.tvSendfor:/*礼物4 枫哥*/
+                rewardLayout.showGift(bean4);
+                break;
+            case R.id.tvSendanother:/*礼物1 枫哥*/
+                rewardLayout.showGift(bean5);
                 break;
         }
     }

@@ -44,7 +44,7 @@
             android:layout_centerVertical="true"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="糖果"
+            android:text="糖果喵"
             android:drawableLeft="@mipmap/tg"
             android:textColor="#333"
             android:textSize="10sp" />
@@ -59,7 +59,7 @@
             android:layout_marginRight="5dp"
             android:drawableLeft="@mipmap/good"
             android:gravity="center"
-            android:text="666"
+            android:text="666甲"
             android:textColor="#333"
             android:textSize="10sp" />
 
@@ -73,7 +73,7 @@
             android:layout_marginRight="5dp"
             android:gravity="center"
             android:drawableLeft="@mipmap/banana"
-            android:text="小香蕉"
+            android:text="香蕉P"
             android:textColor="#333"
             android:textSize="10sp" />
 
@@ -87,7 +87,20 @@
             android:layout_marginRight="5dp"
             android:gravity="center"
             android:drawableLeft="@mipmap/yw"
-            android:text="鱼丸"
+            android:text="鱼丸枫"
+            android:textColor="#333"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/tvSendanother"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="糖果枫"
+            android:drawableLeft="@mipmap/tg"
             android:textColor="#333"
             android:textSize="10sp" />
     </LinearLayout>

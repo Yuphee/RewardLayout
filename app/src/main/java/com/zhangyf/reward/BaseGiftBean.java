@@ -12,6 +12,10 @@ public class BaseGiftBean implements Comparable<BaseGiftBean>{
      * 礼物唯一id
      */
     private int giftId;
+    /**
+     * 用户唯一id
+     */
+    private int userId;
     private String giftName;
     private int giftImg;
     private String userName;
@@ -22,7 +26,7 @@ public class BaseGiftBean implements Comparable<BaseGiftBean>{
     /**
      * 礼物持续时间
      */
-    private String giftExistTime;
+    private long giftExistTime;
     /**
      * 礼物刷新时间
      */
@@ -38,6 +42,14 @@ public class BaseGiftBean implements Comparable<BaseGiftBean>{
 
     public void setGiftId(int giftId) {
         this.giftId = giftId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public String getGiftName() {
@@ -64,11 +76,11 @@ public class BaseGiftBean implements Comparable<BaseGiftBean>{
         this.giftCount = giftCount;
     }
 
-    public String getGiftExistTime() {
+    public long getGiftExistTime() {
         return giftExistTime;
     }
 
-    public void setGiftExistTime(String giftExistTime) {
+    public void setGiftExistTime(long giftExistTime) {
         this.giftExistTime = giftExistTime;
     }
 
