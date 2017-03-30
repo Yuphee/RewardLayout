@@ -19,7 +19,8 @@ Activity
     bean4 = new SendGiftBean(4,4,"大枫哥");
     bean5 = new SendGiftBean(4,1,"大枫哥");
     rewardLayout.setGiftItemRes(R.layout.gift_animation_item);//设置礼物item布局
-    rewardLayout.setInitListener(new RewardLayout.GiftListener() {// 初始化，更新，载入动画，以及数字动画的回调，可以自定义
+    rewardLayout.setInitListener(new RewardLayout.GiftListener() {// 初始化，更新，载入动画，
+    //以及数字动画的回调，可以自定义
         @Override
         public View onInit(View view, BaseGiftBean bean) {
             ...//参考 demo
