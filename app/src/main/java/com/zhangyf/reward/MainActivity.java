@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 // 初始化数据
                 giftNum.setText("x1");
+                bean.setGiftCount(1);
                 giftImage.setImageResource(bean.getGiftImg());
                 userName.setText(bean.getUserName());
                 giftName.setText("送出 "+bean.getGiftName());

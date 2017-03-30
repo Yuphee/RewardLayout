@@ -228,15 +228,7 @@ public class RewardLayout extends LinearLayout {
             giftView = initListener.onInit(getGiftView(),mBean);
         }
 
-//        ImageView giftImage = (ImageView) giftView.findViewById(R.id.iv_gift_img);
-//        final TextView giftNum = (TextView) giftView.findViewById(R.id.tv_gift_amount);
-//
-//        // 初始化数据
-//        giftNum.setText("x1");
-//        giftImage.setImageResource(mBean.getGiftImg());
-
         mBean.setLatestRefreshTime(System.currentTimeMillis());
-        mBean.setGiftCount(1);
 
         giftView.setTag(mBean);
         giftView.setEnabled(true);// 标记该giftview可用
