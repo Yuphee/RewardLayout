@@ -36,6 +36,8 @@ public class BaseGiftBean implements Comparable<BaseGiftBean>{
      */
     private int currentIndex;
 
+    private Runnable clearRun;
+
     public int getGiftId() {
         return giftId;
     }
@@ -107,6 +109,14 @@ public class BaseGiftBean implements Comparable<BaseGiftBean>{
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public Runnable getClearRun() {
+        return clearRun;
+    }
+
+    public void setClearRun(Runnable clearRun) {
+        this.clearRun = clearRun;
     }
 
     @Override

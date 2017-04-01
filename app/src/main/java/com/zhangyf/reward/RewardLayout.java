@@ -120,7 +120,7 @@ public class RewardLayout extends LinearLayout {
         mContext = context;
         mActivity = (Activity) mContext;
         beans = new ArrayList<>();
-        clearTiming();
+//        clearTiming();
     }
 
     /**
@@ -199,6 +199,18 @@ public class RewardLayout extends LinearLayout {
             if(initListener != null) {
                 giftView = initListener.onUpdate(giftView,mBean);
             }
+            // 根据GiftExistTime 准时消失，根据GiftExistTime可在配置中配置
+            giftView.removeCallbacks(mBean.getClearRun());
+            final View finalGiftView = giftView;
+            final BaseGiftBean finalMBean = mBean;
+            Runnable run = new Runnable() {
+                @Override
+                public void run() {
+                    removeGiftViewAnim(finalGiftView);
+                }
+            };
+            giftView.postDelayed(run,mBean.getGiftExistTime());
+            finalMBean.setClearRun(run);
 
             ViewGroup vg = (ViewGroup) giftView.getParent();
             vg.setTag(mBean.getLatestRefreshTime());
@@ -221,7 +233,7 @@ public class RewardLayout extends LinearLayout {
     }
 
 
-    private void addGiftViewAnim(BaseGiftBean mBean) {
+    private void addGiftViewAnim(final BaseGiftBean mBean) {
         View giftView = null;
 
         if(initListener != null) {
@@ -229,6 +241,17 @@ public class RewardLayout extends LinearLayout {
         }
 
         mBean.setLatestRefreshTime(System.currentTimeMillis());
+
+        // 根据GiftExistTime 准时消失，根据GiftExistTime可在配置中配置
+        final View finalGiftView = giftView;
+        Runnable run = new Runnable() {
+            @Override
+            public void run() {
+                removeGiftViewAnim(finalGiftView);
+            }
+        };
+        finalGiftView.postDelayed(run,mBean.getGiftExistTime());
+        mBean.setClearRun(run);
 
         giftView.setTag(mBean);
         giftView.setEnabled(true);// 标记该giftview可用
@@ -239,15 +262,6 @@ public class RewardLayout extends LinearLayout {
         if(initListener != null) {
             initListener.addAnim(giftView);
         }
-
-        // TODO: 根据GiftExistTime 准时小时，不采用timer轮训
-//        final View finalGiftView = giftView;
-//        finalGiftView.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                removeGiftViewAnim(finalGiftView);
-//            }
-//        },mBean.getGiftExistTime());
 
     }
 
@@ -350,6 +364,7 @@ public class RewardLayout extends LinearLayout {
     /**
      * 定时清除礼物每秒检查一次，所以礼物的离场时间必须设置为1秒的整数倍
      */
+    @Deprecated
     private void clearTiming() {
         TimerTask task = new TimerTask() {
             @Override
