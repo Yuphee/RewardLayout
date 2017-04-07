@@ -74,7 +74,6 @@ XML
         android:layout_marginTop="100dp"
         android:animateLayoutChanges="true"
         app:max_gift="3"
-        app:gift_dur="3000"
         android:orientation="vertical" />
 ```
 Config
