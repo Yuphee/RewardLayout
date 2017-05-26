@@ -1,4 +1,4 @@
-package com.zhangyf.reward;
+package com.zhangyf.reward.bean;
 
 import android.support.annotation.NonNull;
 

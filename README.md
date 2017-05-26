@@ -67,7 +67,7 @@ Activity
 ```
 XML
  ```java
-<com.zhangyf.reward.RewardLayout
+<com.zhangyf.reward.view.RewardLayout
         android:id="@+id/llgiftcontent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

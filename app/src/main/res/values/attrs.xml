@@ -4,7 +4,6 @@
     <!-- RewardAnim -->
     <declare-styleable name="RewardLayout">
         <attr name="max_gift" format="integer" />
-        <attr name="gift_dur" format="integer" />
     </declare-styleable>
 
 

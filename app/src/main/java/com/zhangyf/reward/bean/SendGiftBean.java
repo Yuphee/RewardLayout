@@ -1,4 +1,4 @@
-package com.zhangyf.reward;
+package com.zhangyf.reward.bean;
 
 /**
  * Created by zhangyf on 2017/3/30.
