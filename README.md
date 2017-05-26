@@ -15,7 +15,7 @@ Activity
  ```java
     bean1 = new SendGiftBean(1,1,"林喵喵");// 构建发送礼物的bean包含礼物id，name和userid,username
     bean2 = new SendGiftBean(2,2,"马甲");
-    bean3 = new SendGiftBean(3,3,"大P神");
+    bean3 = new SendGiftBean(3,3,"小梦梦");
     bean4 = new SendGiftBean(4,4,"大枫哥");
     bean5 = new SendGiftBean(4,1,"大枫哥");
     rewardLayout.setGiftItemRes(R.layout.gift_animation_item);//设置礼物item布局
@@ -39,7 +39,7 @@ Activity
         }
 
         @Override
-        public void numAnim(View view) {
+        public  AnimationSet outAnim() {
            ...//参考 demo
         }
     });
@@ -53,7 +53,7 @@ Activity
             case R.id.tvSendtwo:/*礼物2 马甲*/
                 rewardLayout.showGift(bean2);
                 break;
-            case R.id.tvSendthree:/*礼物3 P神*/
+            case R.id.tvSendthree:/*礼物3 小梦梦*/
                 rewardLayout.showGift(bean3);
                 break;
             case R.id.tvSendfor:/*礼物4 枫哥*/
@@ -78,17 +78,17 @@ XML
 ```
 Config
  ```java
- public class GiftConfig {
-    public static final int giftCount = 4;
-    public static final int[] giftIds = new int[] {1,2,3,4};
-    public static final int[] giftRes = new int[] {R.mipmap.tg,R.mipmap.good,R.mipmap.banana,R.mipmap.yw};
-    public static final String[] giftNames = new String[] {"糖果","666","小香蕉","鱼丸"};
-    public static final long[] stayTime = new long[] {2000,2500,2700,3000};
-}
+  GiftConfig.getInstance()
+                .setGiftCount(4)
+                .setGiftIds(new int[] {1,2,3,4})
+                .setGiftNames(new String[] {"糖果","666","小香蕉","大鱼丸"})
+                .setGiftRes(new int[] {R.mipmap.tg,R.mipmap.good,R.mipmap.banana,R.mipmap.yw})
+                .setStayTimes(new long[] {2000,2500,2700,5200});
  ```
 ## Todo
 由于时间匆忙，界面，动画，数据的抽离，配置还比较生硬，接入并不是非常简洁，如果又发现任何Bug或者改进的意见欢迎提issue或者邮件#，#
-
+送礼速度过快会出现相同的2条问题
+ 
 ## Fixed 
 已改进不同礼物消失机制，采用postHandler及removeCallbacks去更新和执行删除时机，可以通过config自定义每种礼物不同的持续时间，同时已优化不同人对同种礼物的区分
 
