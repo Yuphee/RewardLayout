@@ -2,31 +2,19 @@ package com.zhangyf.reward.bean;
 
 import android.support.annotation.NonNull;
 
+import java.util.Calendar;
+
 /**
- * Created by zhangyf on 2017/3/20.
+ * @author zhangyf
+ * @date 2017/3/20
  */
 
-public class BaseGiftBean implements Comparable<BaseGiftBean>{
+public abstract class BaseGiftBean implements Comparable<BaseGiftBean>,GiftIdentify,Cloneable{
 
-    /**
-     * 礼物唯一id
-     */
-    private int giftId;
-    /**
-     * 用户唯一id
-     */
-    private int userId;
-    private String giftName;
-    private int giftImg;
-    private String userName;
     /**
      * 礼物计数
      */
     private int giftCount;
-    /**
-     * 礼物持续时间
-     */
-    private long giftExistTime;
     /**
      * 礼物刷新时间
      */
@@ -36,91 +24,43 @@ public class BaseGiftBean implements Comparable<BaseGiftBean>{
      */
     private int currentIndex;
 
-    private Runnable clearRun;
-
-    public int getGiftId() {
-        return giftId;
-    }
-
-    public void setGiftId(int giftId) {
-        this.giftId = giftId;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public String getGiftName() {
-        return giftName;
-    }
-
-    public void setGiftName(String giftName) {
-        this.giftName = giftName;
-    }
-
-    public int getGiftImg() {
-        return giftImg;
-    }
-
-    public void setGiftImg(int giftImg) {
-        this.giftImg = giftImg;
-    }
-
-    public int getGiftCount() {
+    @Override
+    public int getTheGiftCount() {
         return giftCount;
     }
 
-    public void setGiftCount(int giftCount) {
-        this.giftCount = giftCount;
-    }
-
-    public long getGiftExistTime() {
-        return giftExistTime;
-    }
-
-    public void setGiftExistTime(long giftExistTime) {
-        this.giftExistTime = giftExistTime;
-    }
-
-    public long getLatestRefreshTime() {
+    @Override
+    public long getTheLatestRefreshTime() {
         return latestRefreshTime;
     }
 
-    public void setLatestRefreshTime(long latestRefreshTime) {
-        this.latestRefreshTime = latestRefreshTime;
-    }
-
-    public int getCurrentIndex() {
+    @Override
+    public int getTheCurrentIndex() {
         return currentIndex;
     }
 
-    public BaseGiftBean setCurrentIndex(int currentIndex) {
-        this.currentIndex = currentIndex;
-        return this;
+    @Override
+    public void setTheGiftCount(int count) {
+        giftCount = count;
     }
 
-    public String getUserName() {
-        return userName;
+    @Override
+    public void setTheLatestRefreshTime(long time) {
+        latestRefreshTime = time;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public Runnable getClearRun() {
-        return clearRun;
-    }
-
-    public void setClearRun(Runnable clearRun) {
-        this.clearRun = clearRun;
+    @Override
+    public void setTheCurrentIndex(int index) {
+        currentIndex = index;
     }
 
     @Override
     public int compareTo(@NonNull BaseGiftBean o) {
-        return (int) (this.getLatestRefreshTime()-o.getLatestRefreshTime());
+        return (int) (this.getTheLatestRefreshTime()-o.getTheLatestRefreshTime());
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

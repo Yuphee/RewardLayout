@@ -11,7 +11,9 @@ import android.widget.TextView;
 import com.zhangyf.reward.anim.AnimUtils;
 import com.zhangyf.reward.anim.NumAnim;
 import com.zhangyf.reward.bean.BaseGiftBean;
+import com.zhangyf.reward.bean.GiftIdentify;
 import com.zhangyf.reward.bean.SendGiftBean;
+import com.zhangyf.reward.config.GiftConfig;
 import com.zhangyf.reward.view.RewardLayout;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -44,15 +46,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvSendthree.setOnClickListener(this);
         tvSendfor.setOnClickListener(this);
         tvSendanother.setOnClickListener(this);
-        bean1 = new SendGiftBean(1,1,"林喵喵");
-        bean2 = new SendGiftBean(2,2,"马甲");
-        bean3 = new SendGiftBean(3,3,"小梦梦");
-        bean4 = new SendGiftBean(4,4,"大枫哥");
-        bean5 = new SendGiftBean(4,1,"大枫哥");
+        bean1 = new SendGiftBean(1,1,"林喵喵","糖果",R.mipmap.tg,2700);
+        bean2 = new SendGiftBean(2,2,"马甲","666",R.mipmap.good,3000);
+        bean3 = new SendGiftBean(3,3,"小梦梦","小香蕉",R.mipmap.banana,2500);
+        bean4 = new SendGiftBean(4,4,"大枫哥","鱼丸",R.mipmap.yw,2000);
+        bean5 = new SendGiftBean(4,1,"大枫哥","糖果",R.mipmap.tg,2700);
         rewardLayout.setGiftItemRes(R.layout.gift_animation_item);
-        rewardLayout.setInitListener(new RewardLayout.GiftListener() {
+        rewardLayout.setGiftAdapter(new RewardLayout.GiftAdapter<SendGiftBean>() {
             @Override
-            public View onInit(View view, BaseGiftBean bean) {
+            public View onInit(View view, SendGiftBean bean) {
                 ImageView giftImage = (ImageView) view.findViewById(R.id.iv_gift_img);
                 final TextView giftNum = (TextView) view.findViewById(R.id.tv_gift_amount);
                 TextView userName = (TextView) view.findViewById(R.id.tv_user_name);
@@ -60,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 // 初始化数据
                 giftNum.setText("x1");
-                bean.setGiftCount(1);
+                bean.setTheGiftCount(1);
                 giftImage.setImageResource(bean.getGiftImg());
                 userName.setText(bean.getUserName());
                 giftName.setText("送出 "+bean.getGiftName());
@@ -68,19 +70,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             @Override
-            public View onUpdate(View view, BaseGiftBean bean) {
+            public View onUpdate(View view, SendGiftBean bean) {
                 ImageView giftImage = (ImageView) view.findViewById(R.id.iv_gift_img);
                 TextView giftNum = (TextView) view.findViewById(R.id.tv_gift_amount);
 
-                int showNum = (Integer) bean.getGiftCount() + 1;
+                int showNum = (Integer) bean.getTheGiftCount() + 1;
                 // 刷新已存在的giftview界面数据
                 giftNum.setText("x" + showNum);
                 giftImage.setImageResource(bean.getGiftImg());
                 // 数字刷新动画
                 new NumAnim().start(giftNum);
                 // 更新tag
-                bean.setGiftCount(showNum);
-                bean.setLatestRefreshTime(System.currentTimeMillis());
+                bean.setTheGiftCount(showNum);
+                bean.setTheLatestRefreshTime(System.currentTimeMillis());
                 view.setTag(bean);
                 return view;
             }
@@ -89,9 +91,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void addAnim(final View view) {
                 final TextView textView = (TextView) view.findViewById(R.id.tv_gift_amount);
                 ImageView img = (ImageView) view.findViewById(R.id.iv_gift_img);
-                Animation giftInAnim = AnimUtils.getInAnimation(MainActivity.this);// 整个giftview动画
-                Animation imgInAnim = AnimUtils.getInAnimation(MainActivity.this);// 礼物图像动画
-                final NumAnim comboAnim = new NumAnim();// 首次连击动画
+                // 整个giftview动画
+                Animation giftInAnim = AnimUtils.getInAnimation(MainActivity.this);
+                // 礼物图像动画
+                Animation imgInAnim = AnimUtils.getInAnimation(MainActivity.this);
+                // 首次连击动画
+                final NumAnim comboAnim = new NumAnim();
                 imgInAnim.setStartTime(500);
                 imgInAnim.setAnimationListener(new Animation.AnimationListener() {
                     @Override
@@ -118,26 +123,67 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public AnimationSet outAnim() {
                 return AnimUtils.getOutAnimation(MainActivity.this);
             }
+
+            @Override
+            public SendGiftBean generateBean(SendGiftBean bean) {
+                try {
+                    return (SendGiftBean) bean.clone();
+                } catch (CloneNotSupportedException e) {
+                    e.printStackTrace();
+                }
+                return null;
+//                SendGiftBean newBean = new SendGiftBean();
+//                newBean.setTheGiftId(bean.getTheGiftId());
+//                newBean.setTheUserId(bean.getTheUserId());
+//                newBean.setTheGiftStay(bean.getTheGiftStay());
+//                newBean.setGiftName(bean.getGiftName());
+//                newBean.setGiftImg(bean.getGiftImg());
+//                newBean.setUserName(bean.getUserName());
+//                return newBean;
+            }
         });
     }
 
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        rewardLayout.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        rewardLayout.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        rewardLayout.onDestroy();
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.tvSendone:/*礼物1 林喵喵*/
+            /*礼物1 林喵喵*/
+            case R.id.tvSendone:
                 rewardLayout.showGift(bean1);
                 break;
-            case R.id.tvSendtwo:/*礼物2 马甲*/
+            /*礼物2 马甲*/
+            case R.id.tvSendtwo:
                 rewardLayout.showGift(bean2);
                 break;
-            case R.id.tvSendthree:/*礼物3 小梦梦*/
+            /*礼物3 小梦梦*/
+            case R.id.tvSendthree:
                 rewardLayout.showGift(bean3);
                 break;
-            case R.id.tvSendfor:/*礼物4 枫哥*/
+            /*礼物4 枫哥*/
+            case R.id.tvSendfor:
                 rewardLayout.showGift(bean4);
                 break;
-            case R.id.tvSendanother:/*礼物1 枫哥*/
+            /*礼物1 枫哥*/
+            case R.id.tvSendanother:
                 rewardLayout.showGift(bean5);
                 break;
         }
