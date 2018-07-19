@@ -67,6 +67,7 @@ XML
 ```
 Config
  ```java
+  @Deprecated
   GiftConfig.getInstance()
                 .setGiftCount(4)
                 .setGiftIds(new int[] {1,2,3,4})
