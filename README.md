@@ -14,57 +14,45 @@
 ## 快速预览
 Activity
  ```java
-    bean1 = new SendGiftBean(1,1,"林喵喵");// 构建发送礼物的bean包含礼物id，name和userid,username
-    bean2 = new SendGiftBean(2,2,"马甲");
-    bean3 = new SendGiftBean(3,3,"小梦梦");
-    bean4 = new SendGiftBean(4,4,"大枫哥");
-    bean5 = new SendGiftBean(4,1,"大枫哥");
+    bean1 = new SendGiftBean(1,1,"林喵喵","糖果",R.mipmap.tg,2700);
+    bean2 = new SendGiftBean(2,2,"马甲","666",R.mipmap.good,3000);
+    bean3 = new SendGiftBean(3,3,"小梦梦","小香蕉",R.mipmap.banana,2500);
+    bean4 = new SendGiftBean(4,4,"大枫哥","鱼丸",R.mipmap.yw,2000);
+    bean5 = new SendGiftBean(4,1,"大枫哥","糖果",R.mipmap.tg,2700);
     rewardLayout.setGiftItemRes(R.layout.gift_animation_item);//设置礼物item布局
-    rewardLayout.setInitListener(new RewardLayout.GiftListener() {// 初始化，更新，载入动画，
-    //以及数字动画的回调，可以自定义
-        @Override
-        public View onInit(View view, BaseGiftBean bean) {
-            ...//参考 demo
-            return view;
-        }
+    rewardLayout.setGiftAdapter(new RewardLayout.GiftAdapter<SendGiftBean>() {
+            @Override
+            public View onInit(View view, SendGiftBean bean) {
+                //参考demo
+                return view
+            }
 
-        @Override
-        public View onUpdate(View view, BaseGiftBean bean) {
-            ...//参考 demo
-            return view;
-        }
+            @Override
+            public View onUpdate(View view, SendGiftBean bean) {
+                //参考demo
+                return view;
+            }
 
-        @Override
-        public void addAnim(final View view) {
-           ...//参考 demo
-        }
+            @Override
+            public void addAnim(final View view) {
+                //参考demo
+            }
 
-        @Override
-        public  AnimationSet outAnim() {
-           ...//参考 demo
-        }
-    });
-        
-        @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.tvSendone:/*礼物1 林喵喵*/
-                rewardLayout.showGift(bean1);
-                break;
-            case R.id.tvSendtwo:/*礼物2 马甲*/
-                rewardLayout.showGift(bean2);
-                break;
-            case R.id.tvSendthree:/*礼物3 小梦梦*/
-                rewardLayout.showGift(bean3);
-                break;
-            case R.id.tvSendfor:/*礼物4 枫哥*/
-                rewardLayout.showGift(bean4);
-                break;
-            case R.id.tvSendanother:/*礼物1 枫哥*/
-                rewardLayout.showGift(bean5);
-                break;
-        }
-    }
+            @Override
+            public AnimationSet outAnim() {
+                return AnimUtils.getOutAnimation(MainActivity.this);
+            }
+
+            @Override
+            public SendGiftBean generateBean(SendGiftBean bean) {
+                try {
+                    return (SendGiftBean) bean.clone();
+                } catch (CloneNotSupportedException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        });
 ```
 XML
  ```java
@@ -79,21 +67,23 @@ XML
 ```
 Config
  ```java
+  @Deprecated
   GiftConfig.getInstance()
                 .setGiftCount(4)
                 .setGiftIds(new int[] {1,2,3,4})
                 .setGiftNames(new String[] {"糖果","666","小香蕉","大鱼丸"})
                 .setGiftRes(new int[] {R.mipmap.tg,R.mipmap.good,R.mipmap.banana,R.mipmap.yw})
                 .setStayTimes(new long[] {2000,2500,2700,5200});
+  以上配置已去除，全部参数有数据对象返回,数据对象必须继承BaseGiftBean，并实现相应接口，具体参考demo
  ```
 ## Todo
 v1.2 生成lib库,发布到jcenter<br>
-由于时间匆忙，界面，动画，数据的抽离，如果又发现任何Bug或者改进的意见欢迎提issue或者邮件#，#
+如果又发现任何Bug或者改进的意见欢迎提issue或者邮件#，#
 
  
 ## Fixed 
 v1.0 已改进不同礼物消失机制，采用postHandler及removeCallbacks去更新和执行删除时机，可以通过config自定义每种礼物不同的持续时间，同时已优化不同人对同种礼物的区分<br>
-v1.1 修复快速送礼物重复问题,调整postDelay为ScheduledExecutorService去定时清除到期礼物
+v1.1 修复快速送礼物重复问题,调整postDelay为ScheduledExecutorService去定时清除到期礼物，调整数据结构，用户自定义数据对象需继承BaseGiftBean并实现相应接口，取消GiftConfig配置
 
 ## Thanks
 感谢许同学提供的切图
