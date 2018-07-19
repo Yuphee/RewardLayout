@@ -8,7 +8,7 @@
 ![image](/screenshots/photo.gif)
 
 ## Statement
-本项目旨在提供实现参考，交流学习
+本项目旨在提供实现参考，交流学习。<br>
 可自定义礼物item布局，动画，最大条数，每种礼物持续时间，定义好自己的BaseGiftBean及SendGiftBean可轻松实现自定义的效果，最大礼物数和礼物停留时间都可在xml上或者代码直接定义，具体接入请参考demo
 
 ## 快速预览
@@ -87,12 +87,12 @@ Config
                 .setStayTimes(new long[] {2000,2500,2700,5200});
  ```
 ## Todo
-v1.2 生成lib库,发布到jcenter
+v1.2 生成lib库,发布到jcenter<br>
 由于时间匆忙，界面，动画，数据的抽离，如果又发现任何Bug或者改进的意见欢迎提issue或者邮件#，#
 
  
 ## Fixed 
-v1.0 已改进不同礼物消失机制，采用postHandler及removeCallbacks去更新和执行删除时机，可以通过config自定义每种礼物不同的持续时间，同时已优化不同人对同种礼物的区分
+v1.0 已改进不同礼物消失机制，采用postHandler及removeCallbacks去更新和执行删除时机，可以通过config自定义每种礼物不同的持续时间，同时已优化不同人对同种礼物的区分<br>
 v1.1 修复快速送礼物重复问题
 
 ## Thanks
