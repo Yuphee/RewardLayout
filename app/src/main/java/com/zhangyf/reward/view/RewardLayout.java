@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -44,13 +48,35 @@ public class RewardLayout extends LinearLayout {
     private List<BaseGiftBean> beans;
     private GiftListener initListener;
     private AnimationSet outAnim = null;
-    private List<View> giftViewCollection = new ArrayList<View>();
+    ScheduledExecutorService ses = Executors.newScheduledThreadPool(4);
 
-    public interface GiftListener{
+    public interface GiftListener {
+        /**
+         * 初始化
+         * @param view
+         * @param bean
+         * @return
+         */
         View onInit(View view, BaseGiftBean bean);
+
+        /**
+         * 更新
+         * @param view
+         * @param bean
+         * @return
+         */
         View onUpdate(View view, BaseGiftBean bean);
+
+        /**
+         * 添加进入动画
+         * @param view
+         */
         void addAnim(View view);
-//        void numAnim(View view);
+
+        /**
+         * 添加退出动画
+         * @return
+         */
         AnimationSet outAnim();
     }
 
@@ -117,7 +143,7 @@ public class RewardLayout extends LinearLayout {
         mContext = context;
         mActivity = (Activity) mContext;
         beans = new ArrayList<>();
-//        clearTiming();
+        startClearService();
     }
 
     /**
@@ -151,36 +177,37 @@ public class RewardLayout extends LinearLayout {
     public void showGift(SendGiftBean sBean) {
         BaseGiftBean bean = null;
         for (BaseGiftBean baseGiftBean : beans) {
-            if(baseGiftBean.getGiftId() == sBean.getGiftId() && baseGiftBean.getUserId() == sBean.getUserId()){
+            if (baseGiftBean.getGiftId() == sBean.getGiftId() && baseGiftBean.getUserId() == sBean.getUserId()) {
                 bean = baseGiftBean;
             }
         }
-        if(bean == null) {
+        if (bean == null) {
             bean = generateGift(sBean);
             beans.add(bean);
         }
         BaseGiftBean mBean = null;
-        View giftView = findViewWithTag(bean);
-        if (giftView != null && !giftView.isEnabled()) {
-            giftView = null;
-        }
-        if (giftView == null) {/*该用户不在礼物显示列表*/
+        View giftView = findSameUserGiftView(bean);
+        /*该用户不在礼物显示列表*/
+        if (giftView == null) {
             mBean = bean;
-            if (getCurrentGiftCount() > MAX_GIFT_COUNT - 1) {/*如果正在显示的礼物的个数超过MAX_GIFT_COUNT个，那么就移除最后一次更新时间比较长的*/
+            /*如果正在显示的礼物的个数超过MAX_GIFT_COUNT个，那么就移除最后一次更新时间比较长的*/
+            if (getCurrentGiftCount() > MAX_GIFT_COUNT - 1) {
                 List<BaseGiftBean> list = new ArrayList();
                 for (int i = 0; i < getChildCount(); i++) {
                     ViewGroup vg = (ViewGroup) getChildAt(i);
-                    for(int j=0;j<vg.getChildCount();j++) {
-                        if(vg.getChildAt(j).isEnabled() == true){
+                    for (int j = 0; j < vg.getChildCount(); j++) {
+                        if (vg.getChildAt(j).isEnabled()) {
                             BaseGiftBean gBean = (BaseGiftBean) vg.getChildAt(j).getTag();
                             list.add(gBean.setCurrentIndex(i));
                         }
                     }
                 }
-                Collections.sort(list);// 根据加入时间排序所有child中giftview
+                // 根据加入时间排序所有child中giftview
+                Collections.sort(list);
                 if (list.size() > 0) {
-                    latestIndex = list.get(0).getCurrentIndex();
-                    removeGiftViewAnim(latestIndex);
+//                    latestIndex = list.get(0).getCurrentIndex();
+//                    removeGiftViewAnim(latestIndex);
+                    removeGiftViewAnim(findSameUserGiftView(list.get(0)));
                 }
                 addGiftViewAnim(mBean);
             } else {
@@ -188,25 +215,28 @@ public class RewardLayout extends LinearLayout {
             }
 
         } else {
-            mBean = (BaseGiftBean) giftView.getTag();
-            if(initListener != null) {
-                giftView = initListener.onUpdate(giftView,mBean);
-            }
-            // 根据GiftExistTime 准时消失，根据GiftExistTime可在配置中配置
-            giftView.removeCallbacks(mBean.getClearRun());
-            final View finalGiftView = giftView;
-            final BaseGiftBean finalMBean = mBean;
-            Runnable run = new Runnable() {
-                @Override
-                public void run() {
-                    removeGiftViewAnim(finalGiftView);
+            if(giftView.isEnabled()) {
+                mBean = (BaseGiftBean) giftView.getTag();
+                if (initListener != null) {
+                    giftView = initListener.onUpdate(giftView, mBean);
                 }
-            };
-            giftView.postDelayed(run,mBean.getGiftExistTime());
-            finalMBean.setClearRun(run);
-
-            ViewGroup vg = (ViewGroup) giftView.getParent();
-            vg.setTag(mBean.getLatestRefreshTime());
+                // 根据GiftExistTime 准时消失，根据GiftExistTime可在配置中配置
+//            giftView.removeCallbacks(mBean.getClearRun());
+//            final View finalGiftView = giftView;
+//            final BaseGiftBean finalMBean = mBean;
+//            Runnable run = new Runnable() {
+//                @Override
+//                public void run() {
+//                    removeGiftViewAnim(finalGiftView);
+//                }
+//            };
+//            giftView.postDelayed(run, mBean.getGiftExistTime());
+//            finalMBean.setClearRun(run);
+                mBean.setLatestRefreshTime(System.currentTimeMillis());
+                giftView.setTag(mBean);
+                ViewGroup vg = (ViewGroup) giftView.getParent();
+                vg.setTag(mBean.getLatestRefreshTime());
+            }
         }
     }
 
@@ -226,44 +256,46 @@ public class RewardLayout extends LinearLayout {
     private void addGiftViewAnim(final BaseGiftBean mBean) {
         View giftView = null;
 
-        if(initListener != null) {
-            giftView = initListener.onInit(getGiftView(),mBean);
+        if (initListener != null) {
+            giftView = initListener.onInit(getGiftView(), mBean);
         }
 
         mBean.setLatestRefreshTime(System.currentTimeMillis());
 
         // 根据GiftExistTime 准时消失，根据GiftExistTime可在配置中配置
-        final View finalGiftView = giftView;
-        Runnable run = new Runnable() {
-            @Override
-            public void run() {
-                removeGiftViewAnim(finalGiftView);
-            }
-        };
-        finalGiftView.postDelayed(run,mBean.getGiftExistTime());
-        mBean.setClearRun(run);
+//        final View finalGiftView = giftView;
+//        Runnable run = new Runnable() {
+//            @Override
+//            public void run() {
+//                removeGiftViewAnim(finalGiftView);
+//            }
+//        };
+//        finalGiftView.postDelayed(run, mBean.getGiftExistTime());
+//        mBean.setClearRun(run);
 
         giftView.setTag(mBean);
-        giftView.setEnabled(true);// 标记该giftview可用
+        // 标记该giftview可用
+        giftView.setEnabled(true);
 
-        addChildGift(giftView);// 如果送礼非常快在add之前再进来一个相同的礼物可能会出现不会叠加而跑到下面的布局中去
+        addChildGift(giftView);
         invalidate();
 
-        if(initListener != null) {
+        if (initListener != null) {
             initListener.addAnim(giftView);
         }
 
     }
 
     /**
-     *
      * 删除指定framelayout下的view的礼物动画
+     *
      * @param view
      */
     private void removeGiftViewAnim(final View view) {
-        if(view != null) {
-            view.setEnabled(false);// 标记该giftview不可用
-            if(initListener != null) {
+        if (view != null) {
+            // 标记该giftview不可用
+            view.setEnabled(false);
+            if (initListener != null) {
                 outAnim = initListener.outAnim();
                 outAnim.setFillAfter(true);
                 outAnim.setAnimationListener(new Animation.AnimationListener() {
@@ -273,11 +305,12 @@ public class RewardLayout extends LinearLayout {
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        new Handler().postDelayed(new Runnable() {
+                        new Handler().post(new Runnable() {
+                            @Override
                             public void run() {
                                 removeChildGift(view);
                             }
-                        }, 10);
+                        });
 
                     }
 
@@ -299,13 +332,15 @@ public class RewardLayout extends LinearLayout {
 
     /**
      * 删除指定framelayout下的view的礼物动画
+     *
      * @param index
      */
     private void removeGiftViewAnim(final int index) {
         final View removeView = getChildGift(index);
         if (removeView != null) {
-            removeView.setEnabled(false);// 标记该giftview不可用
-            if(initListener != null) {
+            // 标记该giftview不可用
+            removeView.setEnabled(false);
+            if (initListener != null) {
                 outAnim = initListener.outAnim();
                 outAnim.setFillAfter(true);
                 outAnim.setAnimationListener(new Animation.AnimationListener() {
@@ -315,11 +350,12 @@ public class RewardLayout extends LinearLayout {
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        new Handler().postDelayed(new Runnable() {
+                        new Handler().post(new Runnable() {
+                            @Override
                             public void run() {
                                 removeChildGift(removeView);
                             }
-                        }, 10);
+                        });
 
                     }
 
@@ -341,39 +377,51 @@ public class RewardLayout extends LinearLayout {
 
 
     /**
-     * 定时清除礼物每秒检查一次，所以礼物的离场时间必须设置为1秒的整数倍
+     * 定时清除礼物
      */
-    @Deprecated
-    private void clearTiming() {
+    private void startClearService() {
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
                 int count = getChildCount();
                 for (int i = 0; i < count; i++) {
                     final int index = i;
-                    View view = getChildAt(index);
-                    if (view.getTag() != null) {
-                        long nowtime = System.currentTimeMillis();
-                        long upTime = (long) view.getTag();
-                        if ((nowtime - upTime) >= 3000) {
-                            mActivity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    removeGiftViewAnim(index);
-                                }
-                            });
+                    ViewGroup viewG = (ViewGroup) getChildAt(index);
+                    for (int j = 0; j < viewG.getChildCount(); j++) {
+                        View view = viewG.getChildAt(j);
+                        if (view.getTag() != null && view.isEnabled()) {
+                            BaseGiftBean tag = (BaseGiftBean) view.getTag();
+                            long nowtime = System.currentTimeMillis();
+                            long upTime = tag.getLatestRefreshTime();
+                            if ((nowtime - upTime) >= tag.getGiftExistTime()) {
+                                mActivity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        removeGiftViewAnim(index);
+                                    }
+                                });
+                            }
                         }
                     }
 
                 }
             }
         };
-        Timer timer = new Timer();
-        timer.schedule(task, 0, 1000);
+        ses.scheduleWithFixedDelay(task, 0, 20, TimeUnit.MILLISECONDS);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if(ses != null) {
+            ses.shutdownNow();
+            ses = null;
+        }
     }
 
     /**
      * 移除指定framelayout下面的礼物view
+     *
      * @param index
      */
     private void removeChildGift(int index) {
@@ -387,29 +435,32 @@ public class RewardLayout extends LinearLayout {
 
     /**
      * 移除指定framelayout下面的礼物view
+     *
      * @param view
      */
     private void removeChildGift(View view) {
-        for(int i=0;i<getChildCount();i++) {
-            ViewGroup vg = (ViewGroup)getChildAt(i);
+        for (int i = 0; i < getChildCount(); i++) {
+            ViewGroup vg = (ViewGroup) getChildAt(i);
             final int index = vg.indexOfChild(view);
             if (index >= 0) {
-                vg.removeView(view);
-                BaseGiftBean bean = (BaseGiftBean)view.getTag();
+                BaseGiftBean bean = (BaseGiftBean) view.getTag();
                 int giftId = bean.getGiftId();
                 int userId = bean.getUserId();
-                for (Iterator<BaseGiftBean> it = beans.iterator(); it.hasNext();) {
+                for (Iterator<BaseGiftBean> it = beans.iterator(); it.hasNext(); ) {
                     BaseGiftBean value = it.next();
                     if (value.getGiftId() == giftId && value.getUserId() == userId) {
                         it.remove();
                     }
                 }
+                vg.removeView(view);
+                view = null;
             }
         }
     }
 
     /**
      * 获取指定framelayout下的礼物view
+     *
      * @param index
      * @return
      */
@@ -434,7 +485,7 @@ public class RewardLayout extends LinearLayout {
         for (int i = 0; i < getChildCount(); i++) {
             if (((ViewGroup) getChildAt(i)).getChildCount() == 0) {
                 ((ViewGroup) getChildAt(i)).addView(view);
-                ((ViewGroup) getChildAt(i)).setTag(((BaseGiftBean) view.getTag()).getLatestRefreshTime());
+                getChildAt(i).setTag(((BaseGiftBean) view.getTag()).getLatestRefreshTime());
                 break;
             } else {
                 boolean isAllCancel = true;
@@ -446,19 +497,45 @@ public class RewardLayout extends LinearLayout {
                 }
                 if (isAllCancel) {
                     ((ViewGroup) getChildAt(i)).addView(view);
-                    ((ViewGroup) getChildAt(i)).setTag(((BaseGiftBean) view.getTag()).getLatestRefreshTime());
+                    getChildAt(i).setTag(((BaseGiftBean) view.getTag()).getLatestRefreshTime());
                     break;
                 }
             }
         }
     }
 
+    /**
+     * 找出相同人相同礼物
+     * @param target
+     * @return
+     */
+    private View findSameUserGiftView(BaseGiftBean target) {
+        int targetGiftId = -1;
+        int targetUserId = -1;
+        if (target != null) {
+            targetGiftId = target.getGiftId();
+            targetUserId = target.getUserId();
+        }
+        for (int i = 0; i < getChildCount(); i++) {
+            for (int j = 0; j < ((ViewGroup) getChildAt(i)).getChildCount(); j++) {
+                BaseGiftBean rGiftBean = (BaseGiftBean) ((ViewGroup) getChildAt(i)).getChildAt(j).getTag();
+                if (rGiftBean != null && rGiftBean.getGiftId() == targetGiftId && rGiftBean.getUserId() == targetUserId) {
+                    return ((ViewGroup) getChildAt(i)).getChildAt(j);
+                }
+            }
+        }
+        return null;
+    }
 
-    private int getCurrentGiftCount(){
+    /**
+     * 获取当前在显示的礼物数量
+     * @return
+     */
+    private int getCurrentGiftCount() {
         int count = 0;
-        for(int i=0;i<getChildCount();i++){
-            for(int j=0;j<((ViewGroup)getChildAt(i)).getChildCount();j++){
-                if(((ViewGroup)getChildAt(i)).getChildAt(j).isEnabled() == true) {
+        for (int i = 0; i < getChildCount(); i++) {
+            for (int j = 0; j < ((ViewGroup) getChildAt(i)).getChildCount(); j++) {
+                if (((ViewGroup) getChildAt(i)).getChildAt(j).isEnabled() == true) {
                     count++;
                 }
             }
@@ -466,19 +543,11 @@ public class RewardLayout extends LinearLayout {
         return count;
     }
 
-    public void setMaxGift(int max){
-        MAX_GIFT_COUNT = max;
-    }
-
-    public int getMaxGiftCount(){
-        return MAX_GIFT_COUNT;
-    }
-
-    public void setGiftItemRes(int res) {
-        giftItemRes = res;
-    }
-
-
+    /**
+     * 生成礼物对象
+     * @param sb
+     * @return
+     */
     public BaseGiftBean generateGift(SendGiftBean sb) {
         BaseGiftBean bean = new BaseGiftBean();
         bean.setUserId(sb.getUserId());
@@ -486,22 +555,22 @@ public class RewardLayout extends LinearLayout {
         bean.setUserName(sb.getUserName());
         int index = 0;
         int count = GiftConfig.getInstance().getGiftCount();
-        for(int i=0;i<count;i++) {
-            if(GiftConfig.getInstance().getGiftIds()[i] == sb.getGiftId()){
+        for (int i = 0; i < count; i++) {
+            if (GiftConfig.getInstance().getGiftIds()[i] == sb.getGiftId()) {
                 index = i;
             }
         }
-        if(GiftConfig.getInstance().getStayTime().length != count){
+        if (GiftConfig.getInstance().getStayTime().length != count) {
             throw new IllegalArgumentException("stayTime lenth must equals giftcount");
         }
         bean.setGiftExistTime(GiftConfig.getInstance().getStayTime()[index]);
 
-        if(GiftConfig.getInstance().getGiftNames().length != count){
+        if (GiftConfig.getInstance().getGiftNames().length != count) {
             throw new IllegalArgumentException("giftname lenth must equals giftcount");
         }
         bean.setGiftName(GiftConfig.getInstance().getGiftNames()[index]);
 
-        if(GiftConfig.getInstance().getGiftRes().length != count){
+        if (GiftConfig.getInstance().getGiftRes().length != count) {
             throw new IllegalArgumentException("giftres lenth must equals giftcount");
         }
         bean.setGiftImg(GiftConfig.getInstance().getGiftRes()[index]);
@@ -509,11 +578,23 @@ public class RewardLayout extends LinearLayout {
     }
 
     private int getGiftRes() {
-        if(giftItemRes != 0){
+        if (giftItemRes != 0) {
             return giftItemRes;
-        }else {
+        } else {
             throw new NullPointerException("u should set gift item resource first");
         }
+    }
+
+    public void setMaxGift(int max) {
+        MAX_GIFT_COUNT = max;
+    }
+
+    public int getMaxGiftCount() {
+        return MAX_GIFT_COUNT;
+    }
+
+    public void setGiftItemRes(int res) {
+        giftItemRes = res;
     }
 
 }
