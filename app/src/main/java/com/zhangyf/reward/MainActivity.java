@@ -132,14 +132,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     e.printStackTrace();
                 }
                 return null;
-//                SendGiftBean newBean = new SendGiftBean();
-//                newBean.setTheGiftId(bean.getTheGiftId());
-//                newBean.setTheUserId(bean.getTheUserId());
-//                newBean.setTheGiftStay(bean.getTheGiftStay());
-//                newBean.setGiftName(bean.getGiftName());
-//                newBean.setGiftImg(bean.getGiftImg());
-//                newBean.setUserName(bean.getUserName());
-//                return newBean;
             }
         });
     }
@@ -148,19 +140,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         super.onPause();
-        rewardLayout.onPause();
+        if(rewardLayout != null) {
+            rewardLayout.onPause();
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        rewardLayout.onResume();
+        if(rewardLayout != null) {
+            rewardLayout.onResume();
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        rewardLayout.onDestroy();
+        if(rewardLayout != null) {
+            rewardLayout.onDestroy();
+        }
     }
 
     @Override
