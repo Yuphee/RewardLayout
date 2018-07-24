@@ -7,13 +7,18 @@
 ## Screenshots
 ![image](/screenshots/photo.gif)
 
+## Demo
+[Demo体验](/sample.apk)
+
 ## Statement
 本项目旨在提供实现参考，交流学习。<br>
-可自定义礼物item布局，动画，最大条数，每种礼物持续时间，定义好自己的BaseGiftBean及SendGiftBean可轻松实现自定义的效果，最大礼物数和礼物停留时间都可在xml上或者代码直接定义，具体接入请参考demo
+可自定义礼物item布局，动画，最大条数，每种礼物持续时间，继承BaseGiftBean实现自定义的SendGiftBean并实现相应接口方法，可轻松实现自定义的效果；<br>
+最大礼物数可在xml上指定或者代码直接定义，其它参数可以在自定义SendGiftBean中指定，具体接入请参考demo
 
 ## 快速预览
 Activity
  ```java
+    // 可以由服务器返回json解析得到
     bean1 = new SendGiftBean(1,1,"林喵喵","糖果",R.mipmap.tg,2700);
     bean2 = new SendGiftBean(2,2,"马甲","666",R.mipmap.good,3000);
     bean3 = new SendGiftBean(3,3,"小梦梦","小香蕉",R.mipmap.banana,2500);
@@ -104,13 +109,13 @@ Config
   以上配置已去除，全部参数有数据对象返回,数据对象必须继承BaseGiftBean，并实现相应接口，具体参考demo
  ```
 ## Todo
-v1.2 生成lib库,发布到jcenter<br>
+v1.3 生成lib库,发布到jcenter<br>
 如果又发现任何Bug或者改进的意见欢迎提issue或者邮件#，#
 
  
 ## Fixed 
 v1.0 已改进不同礼物消失机制，采用postHandler及removeCallbacks去更新和执行删除时机，可以通过config自定义每种礼物不同的持续时间，同时已优化不同人对同种礼物的区分<br>
-v1.1 修复快速送礼物重复问题,调整postDelay为ScheduledExecutorService去定时清除到期礼物，调整数据结构，用户自定义数据对象需继承BaseGiftBean并实现相应接口，取消GiftConfig配置
+v1.1 修复快速送礼物重复问题,调整postDelay为ScheduledExecutorService去定时清除到期礼物，调整数据结构，用户自定义数据对象需继承BaseGiftBean并实现相应接口，取消GiftConfig配置<br>
 v1.2 增加礼物LinkedBlockingQueue队列，支持高并发礼物赠送，程序模拟礼物赠送确保礼物都能够被展现，修复部分bug
 
 ## Thanks
