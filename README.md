@@ -53,6 +53,33 @@ Activity
                 return null;
             }
         });
+        
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(rewardLayout != null) {
+            rewardLayout.onPause();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(rewardLayout != null) {
+            rewardLayout.onResume();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(rewardLayout != null) {
+            rewardLayout.onDestroy();
+        }
+    }
+    
+   Just call ->
+   rewardLayout.put(bean1);
 ```
 XML
  ```java
@@ -84,6 +111,7 @@ v1.2 生成lib库,发布到jcenter<br>
 ## Fixed 
 v1.0 已改进不同礼物消失机制，采用postHandler及removeCallbacks去更新和执行删除时机，可以通过config自定义每种礼物不同的持续时间，同时已优化不同人对同种礼物的区分<br>
 v1.1 修复快速送礼物重复问题,调整postDelay为ScheduledExecutorService去定时清除到期礼物，调整数据结构，用户自定义数据对象需继承BaseGiftBean并实现相应接口，取消GiftConfig配置
+v1.2 增加礼物LinkedBlockingQueue队列，支持高并发礼物赠送，程序模拟礼物赠送确保礼物都能够被展现，修复部分bug
 
 ## Thanks
 感谢许同学提供的切图
