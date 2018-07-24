@@ -5,6 +5,7 @@
   如果对你有点帮助的话，点个star哦~
  
 ## Screenshots
+手动版->                          自动版->
 ![image](/screenshots/photo.gif) ![image](/screenshots/photo2.gif)
 
 ## Demo
