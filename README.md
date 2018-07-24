@@ -7,9 +7,13 @@
 ## Screenshots
 ![image](/screenshots/photo.gif)
 
+## Demo
+![快速Demo](/sample.apk)
+
 ## Statement
 本项目旨在提供实现参考，交流学习。<br>
-可自定义礼物item布局，动画，最大条数，每种礼物持续时间，定义好自己的BaseGiftBean及SendGiftBean可轻松实现自定义的效果，最大礼物数和礼物停留时间都可在xml上或者代码直接定义，具体接入请参考demo
+可自定义礼物item布局，动画，最大条数，每种礼物持续时间，继承BaseGiftBean实现自定义的SendGiftBean并实现相应接口方法，可轻松实现自定义的效果；<br>
+最大礼物数可在xml上指定或者代码直接定义，其它参数可以在自定义SendGiftBean中指定，具体接入请参考demo
 
 ## 快速预览
 Activity
@@ -104,7 +108,7 @@ Config
   以上配置已去除，全部参数有数据对象返回,数据对象必须继承BaseGiftBean，并实现相应接口，具体参考demo
  ```
 ## Todo
-v1.2 生成lib库,发布到jcenter<br>
+v1.3 生成lib库,发布到jcenter<br>
 如果又发现任何Bug或者改进的意见欢迎提issue或者邮件#，#
 
  
