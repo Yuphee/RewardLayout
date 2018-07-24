@@ -2,9 +2,11 @@ package com.zhangyf.reward;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +17,12 @@ import com.zhangyf.reward.bean.GiftIdentify;
 import com.zhangyf.reward.bean.SendGiftBean;
 import com.zhangyf.reward.config.GiftConfig;
 import com.zhangyf.reward.view.RewardLayout;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -29,28 +37,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SendGiftBean bean3;
     private SendGiftBean bean4;
     private SendGiftBean bean5;
+    private List<SendGiftBean> giftList = new ArrayList<>();
+    private Button btnAutoSend;
+    private Button btnAutoCancel;
+    private Timer timer;
+    private int count = 0;
+    private boolean isStart;
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        rewardLayout = (RewardLayout)findViewById(R.id.llgiftcontent);
-        tvSendone = (TextView)findViewById(R.id.tvSendone);
-        tvSendtwo = (TextView)findViewById(R.id.tvSendtwo);
-        tvSendthree = (TextView)findViewById(R.id.tvSendthree);
-        tvSendfor = (TextView)findViewById(R.id.tvSendfor);
-        tvSendanother = (TextView)findViewById(R.id.tvSendanother);
+    private void initViews() {
+        rewardLayout = findViewById(R.id.llgiftcontent);
+        tvSendone = findViewById(R.id.tvSendone);
+        tvSendtwo = findViewById(R.id.tvSendtwo);
+        tvSendthree = findViewById(R.id.tvSendthree);
+        tvSendfor = findViewById(R.id.tvSendfor);
+        tvSendanother = findViewById(R.id.tvSendanother);
+        btnAutoSend = findViewById(R.id.btn_auto_send);
+        btnAutoCancel = findViewById(R.id.btn_auto_cancel);
         tvSendone.setOnClickListener(this);
         tvSendtwo.setOnClickListener(this);
         tvSendthree.setOnClickListener(this);
         tvSendfor.setOnClickListener(this);
         tvSendanother.setOnClickListener(this);
+    }
+
+    private void initData() {
         bean1 = new SendGiftBean(1,1,"林喵喵","糖果",R.mipmap.tg,2700);
         bean2 = new SendGiftBean(2,2,"马甲","666",R.mipmap.good,3000);
         bean3 = new SendGiftBean(3,3,"小梦梦","小香蕉",R.mipmap.banana,2500);
         bean4 = new SendGiftBean(4,4,"大枫哥","鱼丸",R.mipmap.yw,2000);
         bean5 = new SendGiftBean(4,1,"大枫哥","糖果",R.mipmap.tg,2700);
+        giftList.add(bean1);
+        giftList.add(bean2);
+        giftList.add(bean3);
+        giftList.add(bean4);
+        giftList.add(bean5);
+        timer = new Timer();
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        initData();
+        initViews();
+
         rewardLayout.setGiftItemRes(R.layout.gift_animation_item);
         rewardLayout.setGiftAdapter(new RewardLayout.GiftAdapter<SendGiftBean>() {
             @Override
@@ -134,6 +165,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return null;
             }
         });
+        btnAutoSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!isStart) {
+                    if(timer == null) {
+                        timer = new Timer();
+                    }
+                    isStart = true;
+                    timer.schedule(new TimerTask() {
+                        @Override
+                        public void run() {
+                            rewardLayout.put(giftList.get(new Random().nextInt(giftList.size())));
+                            Log.e("zyfff", "send count:"+count++);
+                        }
+                    }, 0, 50);
+                }
+            }
+        });
+        btnAutoCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                timer.cancel();
+                timer = null;
+                isStart = false;
+            }
+        });
     }
 
 
@@ -166,23 +223,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()){
             /*礼物1 林喵喵*/
             case R.id.tvSendone:
-                rewardLayout.showGift(bean1);
+                rewardLayout.put(bean1);
                 break;
             /*礼物2 马甲*/
             case R.id.tvSendtwo:
-                rewardLayout.showGift(bean2);
+                rewardLayout.put(bean2);
                 break;
             /*礼物3 小梦梦*/
             case R.id.tvSendthree:
-                rewardLayout.showGift(bean3);
+                rewardLayout.put(bean3);
                 break;
             /*礼物4 枫哥*/
             case R.id.tvSendfor:
-                rewardLayout.showGift(bean4);
+                rewardLayout.put(bean4);
                 break;
             /*礼物1 枫哥*/
             case R.id.tvSendanother:
-                rewardLayout.showGift(bean5);
+                rewardLayout.put(bean5);
                 break;
         }
     }

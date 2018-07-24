@@ -27,7 +27,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -38,7 +41,10 @@ import java.util.concurrent.TimeUnit;
 
 public class RewardLayout extends LinearLayout {
 
-    private final int MAX_COUNT_DEFAULT = 3;
+    public final String TAG = this.getClass().getSimpleName();
+
+    public static final int MAX_COUNT_DEFAULT = 3;
+    public static final int MAX_THREAD = 1;
     private int MAX_GIFT_COUNT;
     private int latestIndex;
     private Context mContext;
@@ -49,11 +55,16 @@ public class RewardLayout extends LinearLayout {
     private List<BaseGiftBean> beans;
     private GiftAdapter adapter;
     private AnimationSet outAnim = null;
-    private ScheduledExecutorService ses;
+    private ScheduledExecutorService clearService;
+    private ExecutorService takeService;
+    private GiftClearer clearer;
+    private GiftBasket basket;
+    private GiftTaker taker;
 
     public interface GiftAdapter<T extends BaseGiftBean> {
         /**
          * 初始化
+         *
          * @param view
          * @param bean
          * @return
@@ -62,6 +73,7 @@ public class RewardLayout extends LinearLayout {
 
         /**
          * 更新
+         *
          * @param view
          * @param bean
          * @return
@@ -70,12 +82,14 @@ public class RewardLayout extends LinearLayout {
 
         /**
          * 添加进入动画
+         *
          * @param view
          */
         void addAnim(View view);
 
         /**
          * 添加退出动画
+         *
          * @return
          */
         AnimationSet outAnim();
@@ -146,8 +160,13 @@ public class RewardLayout extends LinearLayout {
         mContext = context;
         mActivity = (Activity) mContext;
         beans = new ArrayList<>();
-        ses = Executors.newScheduledThreadPool(4);
+        clearer = new GiftClearer();
+        basket = new GiftBasket();
+        taker = new GiftTaker(basket);
+        clearService = Executors.newScheduledThreadPool(MAX_THREAD);
+        takeService = Executors.newFixedThreadPool(MAX_THREAD);
         startClearService();
+        startTakeGiftService();
     }
 
     /**
@@ -178,7 +197,7 @@ public class RewardLayout extends LinearLayout {
      *
      * @param sBean
      */
-    public void showGift(BaseGiftBean sBean) {
+    private void showGift(BaseGiftBean sBean) {
         if (adapter == null) {
             throw new IllegalArgumentException("setAdapter first");
         }
@@ -190,7 +209,7 @@ public class RewardLayout extends LinearLayout {
         }
         if (bean == null) {
             bean = adapter.generateBean(sBean);
-            if(bean == null) {
+            if (bean == null) {
                 throw new NullPointerException("clone return null");
             }
             beans.add(bean);
@@ -226,7 +245,7 @@ public class RewardLayout extends LinearLayout {
             }
 
         } else {
-            if(giftView.isEnabled()) {
+            if (giftView.isEnabled()) {
                 mBean = (BaseGiftBean) giftView.getTag();
                 if (adapter != null) {
                     giftView = adapter.onUpdate(giftView, mBean);
@@ -391,42 +410,23 @@ public class RewardLayout extends LinearLayout {
      * 定时清除礼物
      */
     private void startClearService() {
-        TimerTask task = new TimerTask() {
-            @Override
-            public void run() {
-                int count = getChildCount();
-                for (int i = 0; i < count; i++) {
-                    final int index = i;
-                    ViewGroup viewG = (ViewGroup) getChildAt(index);
-                    for (int j = 0; j < viewG.getChildCount(); j++) {
-                        View view = viewG.getChildAt(j);
-                        if (view.getTag() != null && view.isEnabled()) {
-                            BaseGiftBean tag = (BaseGiftBean) view.getTag();
-                            long nowtime = System.currentTimeMillis();
-                            long upTime = tag.getTheLatestRefreshTime();
-                            if ((nowtime - upTime) >= tag.getTheGiftStay()) {
-                                mActivity.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        removeGiftViewAnim(index);
-                                    }
-                                });
-                            }
-                        }
-                    }
-
-                }
-            }
-        };
-        ses.scheduleWithFixedDelay(task, 0, 20, TimeUnit.MILLISECONDS);
+        if (!clearService.isShutdown()) {
+            clearService.scheduleWithFixedDelay(clearer, 0, 20, TimeUnit.MILLISECONDS);
+        } else {
+            clearService = Executors.newScheduledThreadPool(MAX_THREAD);
+            clearService.scheduleWithFixedDelay(clearer, 0, 20, TimeUnit.MILLISECONDS);
+        }
     }
 
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        if(ses != null) {
-            ses.shutdownNow();
-            ses = null;
+    /**
+     * 不断取礼物队列
+     */
+    private void startTakeGiftService() {
+        if (!takeService.isShutdown()) {
+            takeService.execute(taker);
+        } else {
+            takeService = Executors.newFixedThreadPool(MAX_THREAD);
+            takeService.execute(taker);
         }
     }
 
@@ -517,6 +517,7 @@ public class RewardLayout extends LinearLayout {
 
     /**
      * 找出相同人相同礼物
+     *
      * @param target
      * @return
      */
@@ -540,6 +541,7 @@ public class RewardLayout extends LinearLayout {
 
     /**
      * 获取当前在显示的礼物数量
+     *
      * @return
      */
     private int getCurrentGiftCount() {
@@ -555,26 +557,41 @@ public class RewardLayout extends LinearLayout {
     }
 
     public void onPause() {
-        if(ses != null) {
-            ses.shutdown();
+        if (clearService != null) {
+            clearService.shutdown();
+        }
+        if (takeService != null) {
+            takeService.shutdown();
         }
     }
 
     public void onResume() {
-        if(ses != null) {
-            if(ses.isShutdown()) {
+        if (clearService != null) {
+            if (clearService.isShutdown()) {
                 startClearService();
             }
-        }else {
-            ses = Executors.newScheduledThreadPool(4);
+        } else {
+            clearService = Executors.newScheduledThreadPool(MAX_THREAD);
             startClearService();
+        }
+        if (takeService != null) {
+            if (takeService.isShutdown()) {
+                startTakeGiftService();
+            }
+        }else {
+            takeService = Executors.newFixedThreadPool(MAX_THREAD);
+            startTakeGiftService();
         }
     }
 
     public void onDestroy() {
-        if(ses != null) {
-            ses.shutdownNow();
-            ses = null;
+        if (clearService != null) {
+            clearService.shutdownNow();
+            clearService = null;
+        }
+        if (takeService != null) {
+            takeService.shutdownNow();
+            takeService = null;
         }
     }
 
@@ -599,4 +616,143 @@ public class RewardLayout extends LinearLayout {
         giftItemRes = res;
     }
 
+    /**
+     * 将礼物放入队列
+     *
+     * @param bean
+     * @throws InterruptedException
+     */
+    public void put(BaseGiftBean bean) {
+        if (basket != null) {
+            try {
+                basket.putGift(bean);
+            } catch (InterruptedException e) {
+                Log.e(TAG, "IllegalStateException=" + e.getMessage());
+            }
+        }
+    }
+
+    /**
+     * 礼物清理者
+     */
+    public class GiftClearer implements Runnable {
+
+        @Override
+        public void run() {
+            int count = getChildCount();
+            for (int i = 0; i < count; i++) {
+                final int index = i;
+                ViewGroup viewG = (ViewGroup) getChildAt(index);
+                for (int j = 0; j < viewG.getChildCount(); j++) {
+                    View view = viewG.getChildAt(j);
+                    if (view.getTag() != null && view.isEnabled()) {
+                        BaseGiftBean tag = (BaseGiftBean) view.getTag();
+                        long nowtime = System.currentTimeMillis();
+                        long upTime = tag.getTheLatestRefreshTime();
+                        if ((nowtime - upTime) >= tag.getTheGiftStay()) {
+                            mActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    removeGiftViewAnim(index);
+                                }
+                            });
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+
+    /**
+     * 礼物消费者
+     */
+    public class GiftTaker implements Runnable {
+
+        private String TAG = "TakeGifter";
+
+        private GiftBasket basket;
+        private int count;
+
+        public GiftTaker(GiftBasket basket) {
+            this.basket = basket;
+        }
+
+        @Override
+        public void run() {
+            try {
+                count = 0;
+                while (true) {
+                    final BaseGiftBean gift = basket.takeGift();
+                    if (gift != null && mActivity != null) {
+                        mActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.e("zyfff","show count:"+count++);
+                                showGift(gift);
+                            }
+                        });
+                    }
+                }
+            } catch (InterruptedException e) {
+                Log.e(TAG, "InterruptedException=" + e.getMessage());
+                e.printStackTrace();
+            } catch (IllegalStateException e) {
+                Log.e(TAG, "IllegalStateException=" + e.getMessage());
+                e.printStackTrace();
+            } catch (Exception e) {
+                Log.e(TAG, "Exception=" + e.getMessage());
+                e.printStackTrace();
+            }
+
+        }
+
+    }
+
+    /**
+     * 礼物仓库队列
+     */
+    public class GiftBasket {
+
+        private String TAG = "GiftBasket";
+
+        BlockingQueue<BaseGiftBean> queue = new LinkedBlockingQueue<>();
+
+        /**
+         * 将礼物放入队列
+         *
+         * @param bean
+         * @throws InterruptedException
+         */
+        public void putGift(BaseGiftBean bean) throws InterruptedException {
+            //添加元素到队列，如果队列已满,线程进入等待，直到有空间继续生产
+            queue.put(bean);
+            Log.e(TAG, "puted size:" + queue.size());
+            //添加元素到队列，如果队列已满，抛出IllegalStateException异常，退出生产模式
+//        queue.add(bean);
+            //添加元素到队列，如果队列已满或者说添加失败，返回false，否则返回true，继续生产
+//        queue.offer(bean);
+            //添加元素到队列，如果队列已满，就等待指定时间，如果添加成功就返回true，否则false，继续生产
+//        queue.offer(bean,5, TimeUnit.SECONDS);
+        }
+
+        /**
+         * 从队列取出礼物
+         *
+         * @return
+         * @throws InterruptedException
+         */
+        public BaseGiftBean takeGift() throws InterruptedException {
+            //检索并移除队列头部元素，如果队列为空,线程进入等待，直到有新的数据加入继续消费
+            BaseGiftBean bean = queue.take();
+            Log.e(TAG, "taked size:" + queue.size());
+            //检索并删除队列头部元素，如果队列为空，抛出异常，退出消费模式
+//        Apple bean = queue.remove();
+            //检索并删除队列头部元素，如果队列为空，返回false，否则返回true，继续消费
+//        Apple bean = queue.poll();
+            //检索并删除队列头部元素，如果队列为空，则等待指定时间，成功返回true，否则返回false，继续消费
+//        Apple bean = queue.poll(3, TimeUnit.SECONDS);
+            return bean;
+        }
+    }
 }

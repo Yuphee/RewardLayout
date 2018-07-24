@@ -171,4 +171,28 @@
             android:textColor="#333"
             android:textSize="10sp" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_auto_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:textColor="@android:color/black"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="66dp"
+        android:text="自动模拟送礼"/>
+
+    <Button
+        android:id="@+id/btn_auto_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:textColor="@android:color/black"
+        android:layout_above="@id/btn_auto_send"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="取消自动送礼"/>
 </RelativeLayout>
