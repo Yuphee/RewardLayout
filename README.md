@@ -18,6 +18,7 @@
 ## 快速预览
 Activity
  ```java
+    // 可以由服务器返回json解析得到
     bean1 = new SendGiftBean(1,1,"林喵喵","糖果",R.mipmap.tg,2700);
     bean2 = new SendGiftBean(2,2,"马甲","666",R.mipmap.good,3000);
     bean3 = new SendGiftBean(3,3,"小梦梦","小香蕉",R.mipmap.banana,2500);
