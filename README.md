@@ -5,7 +5,7 @@
   如果对你有点帮助的话，点个star哦~
  
 ## Screenshots
-手动版->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;自动版-><br>
+手动版->&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp自动版-><br>
 ![image](/screenshots/photo.gif) ![image](/screenshots/photo2.gif)
 
 ## Demo
