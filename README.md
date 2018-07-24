@@ -8,7 +8,7 @@
 ![image](/screenshots/photo.gif)
 
 ## Demo
-![快速Demo](/sample.apk)
+[快速Demo](/sample.apk)
 
 ## Statement
 本项目旨在提供实现参考，交流学习。<br>
