@@ -1,4 +1,4 @@
-package com.zhangyf.reward.bean;
+package com.zhangyf.gift.bean;
 
 /**
  * 礼物标识

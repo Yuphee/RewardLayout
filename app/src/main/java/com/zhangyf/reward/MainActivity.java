@@ -10,13 +10,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.zhangyf.gift.RewardLayout;
 import com.zhangyf.reward.anim.AnimUtils;
 import com.zhangyf.reward.anim.NumAnim;
-import com.zhangyf.reward.bean.BaseGiftBean;
-import com.zhangyf.reward.bean.GiftIdentify;
 import com.zhangyf.reward.bean.SendGiftBean;
-import com.zhangyf.reward.config.GiftConfig;
-import com.zhangyf.reward.view.RewardLayout;
 
 import java.util.ArrayList;
 import java.util.List;

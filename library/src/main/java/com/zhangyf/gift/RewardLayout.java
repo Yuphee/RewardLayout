@@ -1,9 +1,8 @@
-package com.zhangyf.reward.view;
+package com.zhangyf.gift;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -16,17 +15,13 @@ import android.view.animation.AnimationSet;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.zhangyf.reward.R;
-import com.zhangyf.reward.bean.BaseGiftBean;
-import com.zhangyf.reward.config.GiftConfig;
+
+import com.zhangyf.gift.bean.BaseGiftBean;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -178,8 +173,8 @@ public class RewardLayout extends LinearLayout {
         for (int i = 0; i < MAX_GIFT_COUNT; i++) {
             View child = getGiftView();
             child.measure(
-                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+                    MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
+                    MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
             MarginLayoutParams lp = (MarginLayoutParams) child
                     .getLayoutParams();
             int height = child.getMeasuredHeight() + lp.topMargin
@@ -276,7 +271,7 @@ public class RewardLayout extends LinearLayout {
     private View getGiftView() {
         View view = null;
         view = LayoutInflater.from(mContext).inflate(getGiftRes(), null);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         view.setLayoutParams(lp);
         return view;
 

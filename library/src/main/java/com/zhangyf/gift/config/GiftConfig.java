@@ -1,6 +1,4 @@
-package com.zhangyf.reward.config;
-
-import com.zhangyf.reward.R;
+package com.zhangyf.gift.config;
 
 /**
  * 这里只是给个demo以后部分参数如礼物名称礼物id从服务器对象返回

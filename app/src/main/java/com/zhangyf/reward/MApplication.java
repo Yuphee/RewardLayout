@@ -2,8 +2,6 @@ package com.zhangyf.reward;
 
 import android.app.Application;
 
-import com.zhangyf.reward.config.GiftConfig;
-
 /**
  * Created by zhangyf on 2017/5/26.
  */

@@ -1,8 +1,6 @@
-package com.zhangyf.reward.bean;
+package com.zhangyf.gift.bean;
 
 import android.support.annotation.NonNull;
-
-import java.util.Calendar;
 
 /**
  * @author zhangyf

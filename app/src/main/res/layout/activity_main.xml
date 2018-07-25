@@ -14,7 +14,7 @@
         android:scaleType="centerCrop"
         />
 
-    <com.zhangyf.reward.view.RewardLayout
+    <com.zhangyf.gift.RewardLayout
         android:id="@+id/llgiftcontent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
