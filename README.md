@@ -8,6 +8,24 @@
 手动版&nbsp;vs&nbsp;模拟自动版<br>
 ![image](/screenshots/photo.gif) ![image](/screenshots/photo2.gif)
 
+## Getting started
+Add it in your root build.gradle at the end of repositories:
+ ```java
+allprojects {
+    repositories {
+        ...
+        maven { url "https://jitpack.io" }
+    }
+}
+ ```
+ Add the dependency
+  ```java
+ dependencies {
+        implementation 'com.github.Yuphee:RewardLayout:VERSION_CODE'
+}
+ ```
+ replace VERSION_CODE with real version name such as released in [Here](https://github.com/Yuphee/RewardLayout/releases)
+
 ## Demo
 [Demo体验](/sample.apk)
 
