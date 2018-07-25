@@ -42,7 +42,6 @@ Activity
     bean3 = new SendGiftBean(3,3,"小梦梦","小香蕉",R.mipmap.banana,2500);
     bean4 = new SendGiftBean(4,4,"大枫哥","鱼丸",R.mipmap.yw,2000);
     bean5 = new SendGiftBean(4,1,"大枫哥","糖果",R.mipmap.tg,2700);
-    rewardLayout.setGiftItemRes(R.layout.gift_animation_item);//设置礼物item布局
     rewardLayout.setGiftAdapter(new RewardLayout.GiftAdapter<SendGiftBean>() {
             @Override
             public View onInit(View view, SendGiftBean bean) {
@@ -113,6 +112,7 @@ XML
         android:layout_marginTop="100dp"
         android:animateLayoutChanges="true"
         app:max_gift="3"
+        app:gift_item_layout="@layout/gift_animation_item"
         android:orientation="vertical" />
 ```
 Config
