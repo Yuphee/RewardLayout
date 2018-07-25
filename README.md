@@ -21,10 +21,9 @@ allprojects {
  Add the dependency
   ```java
  dependencies {
-        implementation 'com.github.Yuphee:RewardLayout:VERSION_CODE'
+        implementation 'com.github.Yuphee:RewardLayout:1.0.0'
 }
  ```
- replace VERSION_CODE with real version name such as released in [Here](https://github.com/Yuphee/RewardLayout/releases)
 
 ## Demo
 [Demo体验](/sample.apk)
