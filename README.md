@@ -5,7 +5,7 @@
   如果对你有点帮助的话，点个star哦~
  
 ## Screenshots
-效果展示
+效果展示<br>
 ![image](/screenshots/photo.gif) ![image](/screenshots/photo2.gif)
 
 ## Getting started
