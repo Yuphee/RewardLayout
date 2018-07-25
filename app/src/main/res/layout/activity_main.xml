@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="true"
-    tools:context="com.zhangyf.reward.MainActivity">
+    >
 
     <ImageView
         android:layout_width="wrap_content"
@@ -21,6 +21,7 @@
         android:layout_marginTop="100dp"
         android:animateLayoutChanges="true"
         app:max_gift="3"
+        app:gift_item_layout="@layout/gift_animation_item"
         android:orientation="vertical" />
 
     <LinearLayout

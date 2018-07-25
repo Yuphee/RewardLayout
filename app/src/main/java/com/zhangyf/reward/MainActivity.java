@@ -79,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initData();
         initViews();
 
-        rewardLayout.setGiftItemRes(R.layout.gift_animation_item);
         rewardLayout.setGiftAdapter(new RewardLayout.GiftAdapter<SendGiftBean>() {
             @Override
             public View onInit(View view, SendGiftBean bean) {

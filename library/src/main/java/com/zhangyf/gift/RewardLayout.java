@@ -41,12 +41,12 @@ public class RewardLayout extends LinearLayout {
     public static final int MAX_COUNT_DEFAULT = 3;
     public static final int MAX_THREAD = 1;
     private int MAX_GIFT_COUNT;
+    private int GIFT_ITEM_LAYOUT;
     private int latestIndex;
     private Context mContext;
     private Activity mActivity;
     private int childWidth;
     private int childHeight;
-    private int giftItemRes;
     private List<BaseGiftBean> beans;
     private GiftAdapter adapter;
     private AnimationSet outAnim = null;
@@ -109,6 +109,7 @@ public class RewardLayout extends LinearLayout {
         super(context, attrs);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RewardLayout);
         MAX_GIFT_COUNT = (int) a.getInteger(R.styleable.RewardLayout_max_gift, MAX_COUNT_DEFAULT);
+        GIFT_ITEM_LAYOUT = a.getResourceId(R.styleable.RewardLayout_gift_item_layout,0);
         init(context);
     }
 
@@ -116,6 +117,7 @@ public class RewardLayout extends LinearLayout {
         super(context, attrs, defStyleAttr);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RewardLayout);
         MAX_GIFT_COUNT = (int) a.getDimension(R.styleable.RewardLayout_max_gift, MAX_COUNT_DEFAULT);
+        GIFT_ITEM_LAYOUT = a.getResourceId(R.styleable.RewardLayout_gift_item_layout,0);
         init(context);
     }
 
@@ -592,10 +594,10 @@ public class RewardLayout extends LinearLayout {
 
 
     private int getGiftRes() {
-        if (giftItemRes != 0) {
-            return giftItemRes;
+        if (GIFT_ITEM_LAYOUT != 0) {
+            return GIFT_ITEM_LAYOUT;
         } else {
-            throw new NullPointerException("u should set gift item resource first");
+            throw new NullPointerException("u should init gift item resource first");
         }
     }
 
@@ -607,8 +609,12 @@ public class RewardLayout extends LinearLayout {
         return MAX_GIFT_COUNT;
     }
 
+    /**
+     * before view attachtowindow
+     * @param res
+     */
     public void setGiftItemRes(int res) {
-        giftItemRes = res;
+        GIFT_ITEM_LAYOUT = res;
     }
 
     /**
