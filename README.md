@@ -1,5 +1,6 @@
 # RewardLayout
-仿斗鱼送礼物效果
+仿斗鱼送礼物效果<br>
+本项目旨在提供实现参考，交流学习。<br>
 > 关于我，欢迎关注  
   邮箱：437220638@qq.com
   如果对你有点帮助的话，点个star哦~
@@ -29,7 +30,6 @@ allprojects {
 [Demo体验](/sample.apk)
 
 ## Statement
-&nbsp;&nbsp;本项目旨在提供实现参考，交流学习。<br>
 可自定义礼物item布局，动画，最大条数，每种礼物持续时间，继承BaseGiftBean实现自定义的SendGiftBean并实现相应接口方法，可轻松实现自定义的效果；<br>
 最大礼物数可在xml上指定或者代码直接定义，其它参数可以在自定义SendGiftBean中指定，具体接入请参考demo
 
