@@ -2,8 +2,8 @@
 仿斗鱼送礼物效果<br>
 本项目旨在提供实现参考，交流学习。<br>
 > 关于我，欢迎关注  
-  邮箱：437220638@qq.com
-  有问题及时issue pr 或 email
+  邮箱：437220638@qq.com<br>
+  有问题及时issue pr 或 email<br>
   如果对你有点帮助的话，点个star哦~
  
 ## Screenshots
