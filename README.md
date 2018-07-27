@@ -32,8 +32,9 @@ allprojects {
 
 ## Statement
 **1.关于直播间布局** 可以采用Activity+(Verticalviewpager)+LiveFragment+viewpager(EmptyFragment+LayerFragment);<br>
-如果需要上下滑动切换直播间可以在activity布局最外层套上verticalviewpager，可以参考我的另一个关于兼容上下左右滑动的Viewpager项目[Bidirectio](https://github.com/Yuphee/Bidirectio)直播页单独在LiveFragment实现,HorizontalViewpager覆盖在LiveFragment之上
-HorizontalViewpager中包含2个Fragment，一个是空的透明页，用于左右滑动实现沉浸式效果,另一个则是遮罩层，包含用户列表，头像，评论，礼物布局等一些悬浮在直播TextureView之上的布局
+如果需要上下滑动切换直播间可以在activity布局最外层套上verticalviewpager，可以参考我的另一个关于兼容上下左右滑动的Viewpager项目[Bidirectio](https://github.com/Yuphee/Bidirectio)直播页单独在LiveFragment实现,HorizontalViewpager覆盖在LiveFragment之上<br>
+HorizontalViewpager中包含2个Fragment，一个是空的透明页，用于左右滑动实现沉浸式效果,另一个则是遮罩层，<br>
+包含用户列表，头像，评论，礼物布局等一些悬浮在直播TextureView之上的布局<br><br>
 **2.关于RewardLayout** 可自定义礼物item布局，动画，最大条数，每种礼物持续时间，继承BaseGiftBean实现自定义的SendGiftBean并实现相应接口方法，可轻松实现自定义的效果；<br>
 最大礼物数可在xml上指定或者代码直接定义，其它参数可以在自定义SendGiftBean中指定，具体接入请参考demo
 
