@@ -32,8 +32,7 @@ allprojects {
 
 ## Statement
 **1.关于直播间布局** 可以采用Activity+(Verticalviewpager)+LiveFragment+viewpager(EmptyFragment+LayerFragment);<br>
-如果需要上下滑动切换直播间可以在activity布局最外层套上verticalviewpager，可以参考我的另一个关于兼容上下左右滑动的Viewpager项目[Bidirectio](https://github.com/Yuphee/Bidirectio)直播页单独在LiveFragment实现,HorizontalViewpager覆盖在LiveFragment之上<br>
-HorizontalViewpager中包含2个Fragment，一个是空的透明页，用于左右滑动实现沉浸式效果,另一个则是遮罩层，<br>
+如果需要上下滑动切换直播间可以在activity布局最外层套上verticalviewpager，可以参考我的另一个关于兼容上下左右滑动的Viewpager项目[Bidirectio](https://github.com/Yuphee/Bidirectio)直播页单独在LiveFragment实现,HorizontalViewpager覆盖在LiveFragment之上HorizontalViewpager中包含2个Fragment，一个是空的透明页，用于左右滑动实现沉浸式效果,另一个则是遮罩层，<br>
 包含用户列表，头像，评论，礼物布局等一些悬浮在直播TextureView之上的布局<br><br>
 **2.关于RewardLayout** 可自定义礼物item布局，动画，最大条数，每种礼物持续时间，继承BaseGiftBean实现自定义的SendGiftBean并实现相应接口方法，可轻松实现自定义的效果；<br>
 最大礼物数可在xml上指定或者代码直接定义，其它参数可以在自定义SendGiftBean中指定，具体接入请参考demo
@@ -135,9 +134,9 @@ Config
 **v1.4** 支持更多礼物替换规则<br>
  
 ## Fixed 
-**v1.0** 已改进不同礼物消失机制，采用postHandler及removeCallbacks去更新和执行删除时机，可以通过config自定义每种礼物不同的持续时间，同时已优化不同人对同种礼物的区分<br>
-**v1.1** 修复快速送礼物重复问题,调整postDelay为ScheduledExecutorService去定时清除到期礼物，调整数据结构，用户自定义数据对象需继承BaseGiftBean并实现相应接口，取消GiftConfig配置<br>
-**v1.2** 增加礼物LinkedBlockingQueue队列，支持高并发礼物赠送，程序模拟礼物赠送确保礼物都能够被展现，修复部分bug<br>
+**v1.0** 已改进不同礼物消失机制，采用postHandler及removeCallbacks去更新和执行删除时机，可以通过config自定义每种礼物不同的持续时间，同时已优化不同人对同种礼物的区分<br><br>
+**v1.1** 修复快速送礼物重复问题,调整postDelay为ScheduledExecutorService去定时清除到期礼物，调整数据结构，用户自定义数据对象需继承BaseGiftBean并实现相应接口，取消GiftConfig配置<br><br>
+**v1.2** 增加礼物LinkedBlockingQueue队列，支持高并发礼物赠送，程序模拟礼物赠送确保礼物都能够被展现，修复部分bug<br><br>
 **v1.3** 生成lib库,gradle直接集成<br>
 
 
