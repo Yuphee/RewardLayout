@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 
 import com.zhangyf.gift.bean.GiftIdentify;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -44,7 +45,7 @@ public class RewardLayout extends LinearLayout {
     private int GIFT_ITEM_LAYOUT;
     private int latestIndex;
     private Context mContext;
-    private Activity mActivity;
+    private WeakReference<Activity> mActivityReference;
     private int childWidth;
     private int childHeight;
     private List<GiftIdentify> beans;
@@ -109,7 +110,7 @@ public class RewardLayout extends LinearLayout {
         super(context, attrs);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RewardLayout);
         MAX_GIFT_COUNT = (int) a.getInteger(R.styleable.RewardLayout_max_gift, MAX_COUNT_DEFAULT);
-        GIFT_ITEM_LAYOUT = a.getResourceId(R.styleable.RewardLayout_gift_item_layout,0);
+        GIFT_ITEM_LAYOUT = a.getResourceId(R.styleable.RewardLayout_gift_item_layout, 0);
         init(context);
     }
 
@@ -117,7 +118,7 @@ public class RewardLayout extends LinearLayout {
         super(context, attrs, defStyleAttr);
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RewardLayout);
         MAX_GIFT_COUNT = (int) a.getDimension(R.styleable.RewardLayout_max_gift, MAX_COUNT_DEFAULT);
-        GIFT_ITEM_LAYOUT = a.getResourceId(R.styleable.RewardLayout_gift_item_layout,0);
+        GIFT_ITEM_LAYOUT = a.getResourceId(R.styleable.RewardLayout_gift_item_layout, 0);
         init(context);
     }
 
@@ -155,7 +156,7 @@ public class RewardLayout extends LinearLayout {
 
     private void init(Context context) {
         mContext = context;
-        mActivity = (Activity) mContext;
+        mActivityReference = new WeakReference<>((Activity) mContext);
         beans = new ArrayList<>();
         clearer = new GiftClearer();
         basket = new GiftBasket();
@@ -346,12 +347,14 @@ public class RewardLayout extends LinearLayout {
 
                     }
                 });
-                mActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        view.startAnimation(outAnim);
-                    }
-                });
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            view.startAnimation(outAnim);
+                        }
+                    });
+                }
             }
 
         }
@@ -391,12 +394,15 @@ public class RewardLayout extends LinearLayout {
 
                     }
                 });
-                mActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        removeView.startAnimation(outAnim);
-                    }
-                });
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            removeView.startAnimation(outAnim);
+                        }
+                    });
+                }
+
             }
 
         }
@@ -575,7 +581,7 @@ public class RewardLayout extends LinearLayout {
             if (takeService.isShutdown()) {
                 startTakeGiftService();
             }
-        }else {
+        } else {
             takeService = Executors.newFixedThreadPool(MAX_THREAD);
             startTakeGiftService();
         }
@@ -611,6 +617,7 @@ public class RewardLayout extends LinearLayout {
 
     /**
      * before view attachtowindow
+     *
      * @param res
      */
     public void setGiftItemRes(int res) {
@@ -633,6 +640,14 @@ public class RewardLayout extends LinearLayout {
         }
     }
 
+    private Activity getActivity() {
+        if (mActivityReference != null) {
+            return mActivityReference.get();
+        } else {
+            return null;
+        }
+    }
+
     /**
      * 礼物清理者
      */
@@ -650,8 +665,8 @@ public class RewardLayout extends LinearLayout {
                         GiftIdentify tag = (GiftIdentify) view.getTag();
                         long nowtime = System.currentTimeMillis();
                         long upTime = tag.getTheLatestRefreshTime();
-                        if ((nowtime - upTime) >= tag.getTheGiftStay()) {
-                            mActivity.runOnUiThread(new Runnable() {
+                        if ((nowtime - upTime) >= tag.getTheGiftStay() && getActivity() != null) {
+                            getActivity().runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     removeGiftViewAnim(index);
@@ -685,11 +700,11 @@ public class RewardLayout extends LinearLayout {
                 count = 0;
                 while (true) {
                     final GiftIdentify gift = basket.takeGift();
-                    if (gift != null && mActivity != null) {
-                        mActivity.runOnUiThread(new Runnable() {
+                    if (gift != null && getActivity() != null) {
+                        getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Log.e("zyfff","show count:"+count++);
+                                Log.e("zyfff", "show count:" + count++);
                                 showGift(gift);
                             }
                         });
