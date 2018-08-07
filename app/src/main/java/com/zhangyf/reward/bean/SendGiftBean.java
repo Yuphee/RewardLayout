@@ -1,12 +1,10 @@
 package com.zhangyf.reward.bean;
 
-import com.zhangyf.gift.bean.BaseGiftBean;
-
 /**
  * Created by zhangyf on 2017/3/30.
  */
 
-public class SendGiftBean extends BaseGiftBean {
+public class SendGiftBean extends BaseGiftBean{
 
     /**
      * 用户id
@@ -32,6 +30,19 @@ public class SendGiftBean extends BaseGiftBean {
      * 礼物持续时间
      */
     private long giftStayTime;
+
+    /**
+     * 礼物计数
+     */
+    private int giftCount;
+    /**
+     * 礼物刷新时间
+     */
+    private long latestRefreshTime;
+    /**
+     * 当前index
+     */
+    private int currentIndex;
 
     public SendGiftBean() {
     }

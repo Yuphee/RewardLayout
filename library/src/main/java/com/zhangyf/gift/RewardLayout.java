@@ -16,7 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 
-import com.zhangyf.gift.bean.BaseGiftBean;
+import com.zhangyf.gift.bean.GiftIdentify;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,7 +47,7 @@ public class RewardLayout extends LinearLayout {
     private Activity mActivity;
     private int childWidth;
     private int childHeight;
-    private List<BaseGiftBean> beans;
+    private List<GiftIdentify> beans;
     private GiftAdapter adapter;
     private AnimationSet outAnim = null;
     private ScheduledExecutorService clearService;
@@ -56,7 +56,7 @@ public class RewardLayout extends LinearLayout {
     private GiftBasket basket;
     private GiftTaker taker;
 
-    public interface GiftAdapter<T extends BaseGiftBean> {
+    public interface GiftAdapter<T extends GiftIdentify> {
         /**
          * 初始化
          *
@@ -194,12 +194,12 @@ public class RewardLayout extends LinearLayout {
      *
      * @param sBean
      */
-    private void showGift(BaseGiftBean sBean) {
+    private void showGift(GiftIdentify sBean) {
         if (adapter == null) {
             throw new IllegalArgumentException("setAdapter first");
         }
-        BaseGiftBean bean = null;
-        for (BaseGiftBean baseGiftBean : beans) {
+        GiftIdentify bean = null;
+        for (GiftIdentify baseGiftBean : beans) {
             if (baseGiftBean.getTheGiftId() == sBean.getTheGiftId() && baseGiftBean.getTheUserId() == sBean.getTheUserId()) {
                 bean = baseGiftBean;
             }
@@ -211,19 +211,19 @@ public class RewardLayout extends LinearLayout {
             }
             beans.add(bean);
         }
-        BaseGiftBean mBean = null;
+        GiftIdentify mBean = null;
         View giftView = findSameUserGiftView(bean);
         /*该用户不在礼物显示列表*/
         if (giftView == null) {
             mBean = bean;
             /*如果正在显示的礼物的个数超过MAX_GIFT_COUNT个，那么就移除最后一次更新时间比较长的*/
             if (getCurrentGiftCount() > MAX_GIFT_COUNT - 1) {
-                List<BaseGiftBean> list = new ArrayList();
+                List<GiftIdentify> list = new ArrayList();
                 for (int i = 0; i < getChildCount(); i++) {
                     ViewGroup vg = (ViewGroup) getChildAt(i);
                     for (int j = 0; j < vg.getChildCount(); j++) {
                         if (vg.getChildAt(j).isEnabled()) {
-                            BaseGiftBean gBean = (BaseGiftBean) vg.getChildAt(j).getTag();
+                            GiftIdentify gBean = (GiftIdentify) vg.getChildAt(j).getTag();
                             gBean.setTheCurrentIndex(i);
                             list.add(gBean);
                         }
@@ -243,7 +243,7 @@ public class RewardLayout extends LinearLayout {
 
         } else {
             if (giftView.isEnabled()) {
-                mBean = (BaseGiftBean) giftView.getTag();
+                mBean = (GiftIdentify) giftView.getTag();
                 if (adapter != null) {
                     giftView = adapter.onUpdate(giftView, mBean);
                 }
@@ -280,7 +280,7 @@ public class RewardLayout extends LinearLayout {
     }
 
 
-    private void addGiftViewAnim(final BaseGiftBean mBean) {
+    private void addGiftViewAnim(final GiftIdentify mBean) {
         View giftView = null;
 
         if (adapter != null) {
@@ -451,11 +451,11 @@ public class RewardLayout extends LinearLayout {
             ViewGroup vg = (ViewGroup) getChildAt(i);
             final int index = vg.indexOfChild(view);
             if (index >= 0) {
-                BaseGiftBean bean = (BaseGiftBean) view.getTag();
+                GiftIdentify bean = (GiftIdentify) view.getTag();
                 int giftId = bean.getTheGiftId();
                 int userId = bean.getTheUserId();
-                for (Iterator<BaseGiftBean> it = beans.iterator(); it.hasNext(); ) {
-                    BaseGiftBean value = it.next();
+                for (Iterator<GiftIdentify> it = beans.iterator(); it.hasNext(); ) {
+                    GiftIdentify value = it.next();
                     if (value.getTheGiftId() == giftId && value.getTheUserId() == userId) {
                         it.remove();
                     }
@@ -493,7 +493,7 @@ public class RewardLayout extends LinearLayout {
         for (int i = 0; i < getChildCount(); i++) {
             if (((ViewGroup) getChildAt(i)).getChildCount() == 0) {
                 ((ViewGroup) getChildAt(i)).addView(view);
-                getChildAt(i).setTag(((BaseGiftBean) view.getTag()).getTheLatestRefreshTime());
+                getChildAt(i).setTag(((GiftIdentify) view.getTag()).getTheLatestRefreshTime());
                 break;
             } else {
                 boolean isAllCancel = true;
@@ -505,7 +505,7 @@ public class RewardLayout extends LinearLayout {
                 }
                 if (isAllCancel) {
                     ((ViewGroup) getChildAt(i)).addView(view);
-                    getChildAt(i).setTag(((BaseGiftBean) view.getTag()).getTheLatestRefreshTime());
+                    getChildAt(i).setTag(((GiftIdentify) view.getTag()).getTheLatestRefreshTime());
                     break;
                 }
             }
@@ -518,7 +518,7 @@ public class RewardLayout extends LinearLayout {
      * @param target
      * @return
      */
-    private View findSameUserGiftView(BaseGiftBean target) {
+    private View findSameUserGiftView(GiftIdentify target) {
         int targetGiftId = -1;
         int targetUserId = -1;
         if (target != null) {
@@ -527,7 +527,7 @@ public class RewardLayout extends LinearLayout {
         }
         for (int i = 0; i < getChildCount(); i++) {
             for (int j = 0; j < ((ViewGroup) getChildAt(i)).getChildCount(); j++) {
-                BaseGiftBean rGiftBean = (BaseGiftBean) ((ViewGroup) getChildAt(i)).getChildAt(j).getTag();
+                GiftIdentify rGiftBean = (GiftIdentify) ((ViewGroup) getChildAt(i)).getChildAt(j).getTag();
                 if (rGiftBean != null && rGiftBean.getTheGiftId() == targetGiftId && rGiftBean.getTheUserId() == targetUserId) {
                     return ((ViewGroup) getChildAt(i)).getChildAt(j);
                 }
@@ -623,7 +623,7 @@ public class RewardLayout extends LinearLayout {
      * @param bean
      * @throws InterruptedException
      */
-    public void put(BaseGiftBean bean) {
+    public void put(GiftIdentify bean) {
         if (basket != null) {
             try {
                 basket.putGift(bean);
@@ -647,7 +647,7 @@ public class RewardLayout extends LinearLayout {
                 for (int j = 0; j < viewG.getChildCount(); j++) {
                     View view = viewG.getChildAt(j);
                     if (view.getTag() != null && view.isEnabled()) {
-                        BaseGiftBean tag = (BaseGiftBean) view.getTag();
+                        GiftIdentify tag = (GiftIdentify) view.getTag();
                         long nowtime = System.currentTimeMillis();
                         long upTime = tag.getTheLatestRefreshTime();
                         if ((nowtime - upTime) >= tag.getTheGiftStay()) {
@@ -684,7 +684,7 @@ public class RewardLayout extends LinearLayout {
             try {
                 count = 0;
                 while (true) {
-                    final BaseGiftBean gift = basket.takeGift();
+                    final GiftIdentify gift = basket.takeGift();
                     if (gift != null && mActivity != null) {
                         mActivity.runOnUiThread(new Runnable() {
                             @Override
@@ -717,7 +717,7 @@ public class RewardLayout extends LinearLayout {
 
         private String TAG = "GiftBasket";
 
-        BlockingQueue<BaseGiftBean> queue = new LinkedBlockingQueue<>();
+        BlockingQueue<GiftIdentify> queue = new LinkedBlockingQueue<>();
 
         /**
          * 将礼物放入队列
@@ -725,7 +725,7 @@ public class RewardLayout extends LinearLayout {
          * @param bean
          * @throws InterruptedException
          */
-        public void putGift(BaseGiftBean bean) throws InterruptedException {
+        public void putGift(GiftIdentify bean) throws InterruptedException {
             //添加元素到队列，如果队列已满,线程进入等待，直到有空间继续生产
             queue.put(bean);
             Log.e(TAG, "puted size:" + queue.size());
@@ -743,9 +743,9 @@ public class RewardLayout extends LinearLayout {
          * @return
          * @throws InterruptedException
          */
-        public BaseGiftBean takeGift() throws InterruptedException {
+        public GiftIdentify takeGift() throws InterruptedException {
             //检索并移除队列头部元素，如果队列为空,线程进入等待，直到有新的数据加入继续消费
-            BaseGiftBean bean = queue.take();
+            GiftIdentify bean = queue.take();
             Log.e(TAG, "taked size:" + queue.size());
             //检索并删除队列头部元素，如果队列为空，抛出异常，退出消费模式
 //        Apple bean = queue.remove();

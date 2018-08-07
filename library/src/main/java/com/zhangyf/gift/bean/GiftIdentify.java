@@ -6,7 +6,7 @@ package com.zhangyf.gift.bean;
  * @author zhangyf
  * @date 2018/7/19 0019.
  */
-public interface GiftIdentify {
+public interface GiftIdentify extends Comparable<GiftIdentify>{
 
     int getTheGiftId();
 

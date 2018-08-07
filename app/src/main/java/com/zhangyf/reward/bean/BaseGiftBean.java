@@ -1,13 +1,15 @@
-package com.zhangyf.gift.bean;
+package com.zhangyf.reward.bean;
 
 import android.support.annotation.NonNull;
+
+import com.zhangyf.gift.bean.GiftIdentify;
 
 /**
  * @author zhangyf
  * @date 2017/3/20
  */
 
-public abstract class BaseGiftBean implements Comparable<BaseGiftBean>,GiftIdentify,Cloneable{
+public abstract class BaseGiftBean implements GiftIdentify,Cloneable{
 
     /**
      * 礼物计数
@@ -53,7 +55,7 @@ public abstract class BaseGiftBean implements Comparable<BaseGiftBean>,GiftIdent
     }
 
     @Override
-    public int compareTo(@NonNull BaseGiftBean o) {
+    public int compareTo(@NonNull GiftIdentify o) {
         return (int) (this.getTheLatestRefreshTime()-o.getTheLatestRefreshTime());
     }
 
