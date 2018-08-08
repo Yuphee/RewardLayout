@@ -90,6 +90,14 @@ public class RewardLayout extends LinearLayout {
          */
         AnimationSet outAnim();
 
+        /**
+         * 鉴别礼物唯一性，
+         * @param o 已存在的礼物bean
+         * @param t 新传入的礼物bean
+         * @return 返回比对后的结果
+         */
+        boolean checkUnique(T o,T t);
+
         T generateBean(T bean);
     }
 
@@ -201,7 +209,7 @@ public class RewardLayout extends LinearLayout {
         }
         GiftIdentify bean = null;
         for (GiftIdentify baseGiftBean : beans) {
-            if (baseGiftBean.getTheGiftId() == sBean.getTheGiftId() && baseGiftBean.getTheUserId() == sBean.getTheUserId()) {
+            if (adapter.checkUnique(baseGiftBean,sBean)) {
                 bean = baseGiftBean;
             }
         }

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.zhangyf.gift.RewardLayout;
+import com.zhangyf.gift.bean.GiftIdentify;
 import com.zhangyf.reward.anim.AnimUtils;
 import com.zhangyf.reward.anim.NumAnim;
 import com.zhangyf.reward.bean.SendGiftBean;
@@ -150,6 +151,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public AnimationSet outAnim() {
                 return AnimUtils.getOutAnimation(MainActivity.this);
             }
+
+            @Override
+            public boolean checkUnique(SendGiftBean o, SendGiftBean t) {
+                return o.getTheGiftId() == t.getTheGiftId() && o.getTheUserId() == t.getTheUserId();
+            }
+
 
             @Override
             public SendGiftBean generateBean(SendGiftBean bean) {
