@@ -23,7 +23,7 @@ allprojects {
  Add the dependency
   ```java
  dependencies {
-        implementation 'com.github.Yuphee:RewardLayout:1.0.4'
+        implementation 'com.github.Yuphee:RewardLayout:1.0.5'
 }
  ```
 
@@ -137,14 +137,15 @@ Config
   以上配置已去除，全部参数有数据对象返回,数据对象必须继承BaseGiftBean，并实现相应接口，具体参考demo
  ```
 ## Todo
-**v1.5** 支持更多礼物替换规则<br>
+**v1.6** 支持更多礼物替换规则<br>
  
 ## Fixed 
 **v1.0** 已改进不同礼物消失机制，采用postHandler及removeCallbacks去更新和执行删除时机，可以通过config自定义每种礼物不同的持续时间，同时已优化不同人对同种礼物的区分<br><br>
 **v1.1** 修复快速送礼物重复问题,调整postDelay为ScheduledExecutorService去定时清除到期礼物，调整数据结构，用户自定义数据对象需继承BaseGiftBean并实现相应接口，取消GiftConfig配置<br><br>
 **v1.2** 增加礼物LinkedBlockingQueue队列，支持高并发礼物赠送，程序模拟礼物赠送确保礼物都能够被展现，修复部分bug<br><br>
 **v1.3** 生成lib库,gradle直接集成<br><br>
-**v1.4** 必须继承BaseGiftBean改为实现GiftIdentify接口,修复内存泄漏,礼物唯一条件判断由用户实现<br>
+**v1.4** 必须继承BaseGiftBean改为实现GiftIdentify接口,修复内存泄漏,礼物唯一条件判断由用户实现<br><br>
+**v1.5** 解决相同礼物单次赠送数目变化问题，修复其它问题<br>
 
 
 ## Thanks
