@@ -24,12 +24,14 @@ import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private TextView tvSendzero;
     private TextView tvSendone;
     private TextView tvSendtwo;
     private TextView tvSendthree;
     private TextView tvSendfor;
     private TextView tvSendanother;
     private RewardLayout rewardLayout;
+    private SendGiftBean bean0;
     private SendGiftBean bean1;
     private SendGiftBean bean2;
     private SendGiftBean bean3;
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initViews() {
         rewardLayout = findViewById(R.id.llgiftcontent);
+        tvSendzero = findViewById(R.id.tvSendzero);
         tvSendone = findViewById(R.id.tvSendone);
         tvSendtwo = findViewById(R.id.tvSendtwo);
         tvSendthree = findViewById(R.id.tvSendthree);
@@ -52,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvSendanother = findViewById(R.id.tvSendanother);
         btnAutoSend = findViewById(R.id.btn_auto_send);
         btnAutoCancel = findViewById(R.id.btn_auto_cancel);
+        tvSendzero.setOnClickListener(this);
         tvSendone.setOnClickListener(this);
         tvSendtwo.setOnClickListener(this);
         tvSendthree.setOnClickListener(this);
@@ -60,6 +64,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initData() {
+        bean0 = new SendGiftBean(1,1,"林喵喵","糖果",R.mipmap.tg,2700);
+        bean0.setTheSendGiftSize(2);
         bean1 = new SendGiftBean(1,1,"林喵喵","糖果",R.mipmap.tg,2700);
         bean2 = new SendGiftBean(2,2,"马甲","666",R.mipmap.good,3000);
         bean3 = new SendGiftBean(3,3,"小梦梦","小香蕉",R.mipmap.banana,2500);
@@ -102,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ImageView giftImage = (ImageView) view.findViewById(R.id.iv_gift_img);
                 TextView giftNum = (TextView) view.findViewById(R.id.tv_gift_amount);
 
-                int showNum = (Integer) bean.getTheGiftCount() + 1;
+                int showNum = (Integer) bean.getTheGiftCount() + bean.getTheSendGiftSize();
                 // 刷新已存在的giftview界面数据
                 giftNum.setText("x" + showNum);
                 giftImage.setImageResource(bean.getGiftImg());
@@ -224,6 +230,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+            /*礼物1 林喵喵x2*/
+            case R.id.tvSendzero:
+                rewardLayout.put(bean0);
+                break;
             /*礼物1 林喵喵*/
             case R.id.tvSendone:
                 rewardLayout.put(bean1);

@@ -196,4 +196,18 @@
         android:layout_marginRight="16dp"
         android:layout_marginBottom="16dp"
         android:text="取消自动送礼"/>
+
+    <TextView
+        android:id="@+id/tvSendzero"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/white"
+        android:layout_marginBottom="60dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="糖果喵x2  "
+        android:drawableLeft="@mipmap/tg"
+        android:textColor="#333"
+        android:textSize="10sp" />
 </RelativeLayout>

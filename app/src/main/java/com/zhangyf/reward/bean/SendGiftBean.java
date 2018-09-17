@@ -32,17 +32,22 @@ public class SendGiftBean extends BaseGiftBean{
     private long giftStayTime;
 
     /**
-     * 礼物计数
+     * 单次礼物数目
      */
-    private int giftCount;
-    /**
-     * 礼物刷新时间
-     */
-    private long latestRefreshTime;
-    /**
-     * 当前index
-     */
-    private int currentIndex;
+    private int giftSendSize = 1;
+
+//    /**
+//     * 礼物计数
+//     */
+//    private int giftCount;
+//    /**
+//     * 礼物刷新时间
+//     */
+//    private long latestRefreshTime;
+//    /**
+//     * 当前index
+//     */
+//    private int currentIndex;
 
     public SendGiftBean() {
     }
@@ -101,6 +106,16 @@ public class SendGiftBean extends BaseGiftBean{
     }
 
     @Override
+    public int getTheSendGiftSize() {
+        return giftSendSize;
+    }
+
+    @Override
+    public void setTheSendGiftSize(int size) {
+        giftSendSize = size;
+    }
+
+    @Override
     public long getTheGiftStay() {
         return giftStayTime;
     }
@@ -109,4 +124,5 @@ public class SendGiftBean extends BaseGiftBean{
     public void setTheGiftStay(long stay) {
         giftStayTime = stay;
     }
+
 }

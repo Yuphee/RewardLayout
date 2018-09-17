@@ -253,6 +253,8 @@ public class RewardLayout extends LinearLayout {
         } else {
             if (giftView.isEnabled()) {
                 mBean = (GiftIdentify) giftView.getTag();
+                // 相同礼物需要更新SendGiftSize
+                mBean.setTheSendGiftSize(sBean.getTheSendGiftSize());
                 if (adapter != null) {
                     giftView = adapter.onUpdate(giftView, mBean);
                 }
@@ -527,22 +529,19 @@ public class RewardLayout extends LinearLayout {
     }
 
     /**
-     * 找出相同人相同礼物
+     * 找出唯一识别的礼物
      *
      * @param target
      * @return
      */
     private View findSameUserGiftView(GiftIdentify target) {
-        int targetGiftId = -1;
-        int targetUserId = -1;
-        if (target != null) {
-            targetGiftId = target.getTheGiftId();
-            targetUserId = target.getTheUserId();
+        if(adapter == null) {
+            return null;
         }
         for (int i = 0; i < getChildCount(); i++) {
             for (int j = 0; j < ((ViewGroup) getChildAt(i)).getChildCount(); j++) {
                 GiftIdentify rGiftBean = (GiftIdentify) ((ViewGroup) getChildAt(i)).getChildAt(j).getTag();
-                if (rGiftBean != null && rGiftBean.getTheGiftId() == targetGiftId && rGiftBean.getTheUserId() == targetUserId) {
+                if(adapter.checkUnique(rGiftBean,target)) {
                     return ((ViewGroup) getChildAt(i)).getChildAt(j);
                 }
             }
@@ -771,11 +770,11 @@ public class RewardLayout extends LinearLayout {
             GiftIdentify bean = queue.take();
             Log.e(TAG, "taked size:" + queue.size());
             //检索并删除队列头部元素，如果队列为空，抛出异常，退出消费模式
-//        Apple bean = queue.remove();
+//        GiftIdentify bean = queue.remove();
             //检索并删除队列头部元素，如果队列为空，返回false，否则返回true，继续消费
-//        Apple bean = queue.poll();
+//        GiftIdentify bean = queue.poll();
             //检索并删除队列头部元素，如果队列为空，则等待指定时间，成功返回true，否则返回false，继续消费
-//        Apple bean = queue.poll(3, TimeUnit.SECONDS);
+//        GiftIdentify bean = queue.poll(3, TimeUnit.SECONDS);
             return bean;
         }
     }
