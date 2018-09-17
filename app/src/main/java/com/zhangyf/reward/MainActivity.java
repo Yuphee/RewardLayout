@@ -95,8 +95,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 TextView giftName = (TextView) view.findViewById(R.id.tv_gift_name);
 
                 // 初始化数据
-                giftNum.setText("x1");
-                bean.setTheGiftCount(1);
+                giftNum.setText("x"+bean.getTheSendGiftSize());
+                bean.setTheGiftCount(bean.getTheSendGiftSize());
                 giftImage.setImageResource(bean.getGiftImg());
                 userName.setText(bean.getUserName());
                 giftName.setText("送出 "+bean.getGiftName());
