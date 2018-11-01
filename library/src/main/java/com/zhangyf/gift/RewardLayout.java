@@ -54,8 +54,8 @@ public class RewardLayout extends LinearLayout {
     private ScheduledExecutorService clearService;
     private ExecutorService takeService;
     private GiftClearer clearer;
-    private GiftBasket basket;
     private GiftTaker taker;
+    private GiftBasket basket;
 
     public interface GiftAdapter<T extends GiftIdentify> {
         /**
@@ -166,9 +166,19 @@ public class RewardLayout extends LinearLayout {
         mContext = context;
         mActivityReference = new WeakReference<>((Activity) mContext);
         beans = new ArrayList<>();
-        clearer = new GiftClearer();
+        clearer = new GiftClearer(new GiftInterface() {
+            @Override
+            public void doSomething() {
+                clearTask();
+            }
+        });
         basket = new GiftBasket();
-        taker = new GiftTaker(basket);
+        taker = new GiftTaker(new GiftInterface() {
+            @Override
+            public void doSomething() {
+                takeTask();
+            }
+        });
         clearService = Executors.newScheduledThreadPool(MAX_THREAD);
         takeService = Executors.newFixedThreadPool(MAX_THREAD);
         startClearService();
@@ -343,7 +353,7 @@ public class RewardLayout extends LinearLayout {
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        new Handler().post(new Runnable() {
+                        post(new Runnable() {
                             @Override
                             public void run() {
                                 removeChildGift(view);
@@ -390,7 +400,7 @@ public class RewardLayout extends LinearLayout {
 
                     @Override
                     public void onAnimationEnd(Animation animation) {
-                        new Handler().post(new Runnable() {
+                        post(new Runnable() {
                             @Override
                             public void run() {
                                 removeChildGift(removeView);
@@ -603,6 +613,9 @@ public class RewardLayout extends LinearLayout {
             takeService.shutdownNow();
             takeService = null;
         }
+        clearer = null;
+        taker = null;
+        basket = null;
     }
 
 
@@ -655,34 +668,81 @@ public class RewardLayout extends LinearLayout {
         }
     }
 
+    public interface GiftInterface {
+        void doSomething();
+    }
+
+    /**
+     * 清礼物
+     */
+    private void clearTask() {
+        int count = getChildCount();
+        for (int i = 0; i < count; i++) {
+            final int index = i;
+            ViewGroup viewG = (ViewGroup) getChildAt(index);
+            for (int j = 0; j < viewG.getChildCount(); j++) {
+                View view = viewG.getChildAt(j);
+                if (view.getTag() != null && view.isEnabled()) {
+                    GiftIdentify tag = (GiftIdentify) view.getTag();
+                    long nowtime = System.currentTimeMillis();
+                    long upTime = tag.getTheLatestRefreshTime();
+                    if ((nowtime - upTime) >= tag.getTheGiftStay() && getActivity() != null) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                removeGiftViewAnim(index);
+                            }
+                        });
+                    }
+                }
+            }
+
+        }
+    }
+
+    /**
+     * 取礼物
+     */
+    private void takeTask() {
+        try {
+            while (true) {
+                final GiftIdentify gift = basket.takeGift();
+                if (gift != null && getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showGift(gift);
+                        }
+                    });
+                }
+            }
+        } catch (InterruptedException e) {
+            Log.e(TAG, "InterruptedException=" + e.getMessage());
+            e.printStackTrace();
+        } catch (IllegalStateException e) {
+            Log.e(TAG, "IllegalStateException=" + e.getMessage());
+            e.printStackTrace();
+        } catch (Exception e) {
+            Log.e(TAG, "Exception=" + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     /**
      * 礼物清理者
      */
     public class GiftClearer implements Runnable {
 
+        private WeakReference<GiftInterface> mInterface;
+
+        public GiftClearer(GiftInterface mInterface) {
+            this.mInterface = new WeakReference<>(mInterface);
+        }
+
         @Override
         public void run() {
-            int count = getChildCount();
-            for (int i = 0; i < count; i++) {
-                final int index = i;
-                ViewGroup viewG = (ViewGroup) getChildAt(index);
-                for (int j = 0; j < viewG.getChildCount(); j++) {
-                    View view = viewG.getChildAt(j);
-                    if (view.getTag() != null && view.isEnabled()) {
-                        GiftIdentify tag = (GiftIdentify) view.getTag();
-                        long nowtime = System.currentTimeMillis();
-                        long upTime = tag.getTheLatestRefreshTime();
-                        if ((nowtime - upTime) >= tag.getTheGiftStay() && getActivity() != null) {
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    removeGiftViewAnim(index);
-                                }
-                            });
-                        }
-                    }
-                }
-
+            if(mInterface.get() != null) {
+                mInterface.get().doSomething();
             }
         }
     }
@@ -690,44 +750,21 @@ public class RewardLayout extends LinearLayout {
     /**
      * 礼物消费者
      */
-    public class GiftTaker implements Runnable {
+     public class GiftTaker implements Runnable {
 
         private String TAG = "TakeGifter";
 
-        private GiftBasket basket;
-        private int count;
+        private WeakReference<GiftInterface> mInterface;
 
-        public GiftTaker(GiftBasket basket) {
-            this.basket = basket;
+        public GiftTaker(GiftInterface mInterface) {
+            this.mInterface = new WeakReference<>(mInterface);
         }
 
         @Override
         public void run() {
-            try {
-                count = 0;
-                while (true) {
-                    final GiftIdentify gift = basket.takeGift();
-                    if (gift != null && getActivity() != null) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Log.e("zyfff", "show count:" + count++);
-                                showGift(gift);
-                            }
-                        });
-                    }
-                }
-            } catch (InterruptedException e) {
-                Log.e(TAG, "InterruptedException=" + e.getMessage());
-                e.printStackTrace();
-            } catch (IllegalStateException e) {
-                Log.e(TAG, "IllegalStateException=" + e.getMessage());
-                e.printStackTrace();
-            } catch (Exception e) {
-                Log.e(TAG, "Exception=" + e.getMessage());
-                e.printStackTrace();
+            if(mInterface.get() != null) {
+                mInterface.get().doSomething();
             }
-
         }
 
     }

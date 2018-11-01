@@ -2,6 +2,7 @@ package com.zhangyf.reward;
 
 import android.app.Application;
 
+
 /**
  * Created by zhangyf on 2017/5/26.
  */

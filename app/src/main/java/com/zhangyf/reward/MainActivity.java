@@ -225,6 +225,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(rewardLayout != null) {
             rewardLayout.onDestroy();
         }
+        if(timer != null) {
+            timer.cancel();
+            timer = null;
+        }
     }
 
     @Override
