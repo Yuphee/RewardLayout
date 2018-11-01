@@ -23,7 +23,7 @@ allprojects {
  Add the dependency
   ```java
  dependencies {
-        implementation 'com.github.Yuphee:RewardLayout:1.0.5.1'
+        implementation 'com.github.Yuphee:RewardLayout:1.0.5.2'
 }
  ```
 
@@ -146,7 +146,8 @@ Config
 **v1.3** 生成lib库,gradle直接集成<br><br>
 **v1.4** 必须继承BaseGiftBean改为实现GiftIdentify接口,修复内存泄漏,礼物唯一条件判断由用户实现<br><br>
 **v1.5** 解决相同礼物单次赠送数目变化问题，修复其它问题<br><br>
-**v1.5.1** 降低礼物库的最低sdk版本至19<br>
+**v1.5.1** 降低礼物库的最低sdk版本至19<br><br>
+**v1.5.2** 修复内存泄漏<br>
 
 
 ## Thanks
