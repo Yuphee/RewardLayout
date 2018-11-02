@@ -56,6 +56,8 @@ public class RewardLayout extends LinearLayout {
     private GiftClearer clearer;
     private GiftTaker taker;
     private GiftBasket basket;
+    private GiftInterface clearTask;
+    private GiftInterface takeTask;
 
     public interface GiftAdapter<T extends GiftIdentify> {
         /**
@@ -166,19 +168,21 @@ public class RewardLayout extends LinearLayout {
         mContext = context;
         mActivityReference = new WeakReference<>((Activity) mContext);
         beans = new ArrayList<>();
-        clearer = new GiftClearer(new GiftInterface() {
+        clearTask = new GiftInterface() {
             @Override
             public void doSomething() {
                 clearTask();
             }
-        });
-        basket = new GiftBasket();
-        taker = new GiftTaker(new GiftInterface() {
+        };
+        takeTask = new GiftInterface() {
             @Override
             public void doSomething() {
                 takeTask();
             }
-        });
+        };
+        clearer = new GiftClearer(clearTask);
+        basket = new GiftBasket();
+        taker = new GiftTaker(takeTask);
         clearService = Executors.newScheduledThreadPool(MAX_THREAD);
         takeService = Executors.newFixedThreadPool(MAX_THREAD);
         startClearService();
@@ -613,6 +617,8 @@ public class RewardLayout extends LinearLayout {
             takeService.shutdownNow();
             takeService = null;
         }
+        clearTask = null;
+        takeTask = null;
         clearer = null;
         taker = null;
         basket = null;
@@ -733,16 +739,16 @@ public class RewardLayout extends LinearLayout {
      */
     public class GiftClearer implements Runnable {
 
-        private WeakReference<GiftInterface> mInterface;
+        private GiftInterface mInterface;
 
         public GiftClearer(GiftInterface mInterface) {
-            this.mInterface = new WeakReference<>(mInterface);
+            this.mInterface = mInterface;
         }
 
         @Override
         public void run() {
-            if(mInterface.get() != null) {
-                mInterface.get().doSomething();
+            if(mInterface != null) {
+                mInterface.doSomething();
             }
         }
     }
@@ -754,16 +760,16 @@ public class RewardLayout extends LinearLayout {
 
         private String TAG = "TakeGifter";
 
-        private WeakReference<GiftInterface> mInterface;
+        private GiftInterface mInterface;
 
         public GiftTaker(GiftInterface mInterface) {
-            this.mInterface = new WeakReference<>(mInterface);
+            this.mInterface = mInterface;
         }
 
         @Override
         public void run() {
-            if(mInterface.get() != null) {
-                mInterface.get().doSomething();
+            if(mInterface != null) {
+                mInterface.doSomething();
             }
         }
 

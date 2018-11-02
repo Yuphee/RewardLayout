@@ -6,8 +6,8 @@ android {
         applicationId "com.zhangyf.reward"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 8
-        versionName "1.5.2"
+        versionCode 9
+        versionName "1.5.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -17,7 +17,6 @@ android {
         }
     }
 }
-
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     testImplementation 'junit:junit:4.12'
@@ -30,5 +29,8 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:28.0.0-alpha3'
     implementation 'com.makeramen:roundedimageview:2.2.1'
     implementation project(':library')
+//    implementation 'com.squareup.leakcanary:leakcanary-android:1.6.2'
+//    implementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.2'
 //    implementation 'com.github.Yuphee:RewardLayout:1.0.3'
 }
+
