@@ -122,6 +122,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             @Override
+            public void onKickEnd(SendGiftBean bean) {
+                Log.e("zyfff","onKickEnd:"+bean.getTheGiftId()+","+bean.getGiftName()+","+bean.getUserName()+","+bean.getTheGiftCount());
+            }
+
+            @Override
+            public void onComboEnd(SendGiftBean bean) {
+                Log.e("zyfff","onComboEnd:"+bean.getTheGiftId()+","+bean.getGiftName()+","+bean.getUserName()+","+bean.getTheGiftCount());
+            }
+
+            @Override
             public void addAnim(final View view) {
                 final TextView textView = (TextView) view.findViewById(R.id.tv_gift_amount);
                 ImageView img = (ImageView) view.findViewById(R.id.iv_gift_img);

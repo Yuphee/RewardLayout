@@ -79,6 +79,22 @@ public class RewardLayout extends LinearLayout {
         View onUpdate(View view, T bean);
 
         /**
+         * 礼物展示结束，可能由于送礼者过多，轨道被替换导致结束
+         *
+         * @param bean
+         * @return
+         */
+        void onKickEnd(T bean);
+
+        /**
+         * 礼物连击结束,即被系统自动清理时回调
+         *
+         * @param bean
+         * @return
+         */
+        void onComboEnd(T bean);
+
+        /**
          * 添加进入动画
          *
          * @param view
@@ -272,18 +288,6 @@ public class RewardLayout extends LinearLayout {
                 if (adapter != null) {
                     giftView = adapter.onUpdate(giftView, mBean);
                 }
-                // 根据GiftExistTime 准时消失，根据GiftExistTime可在配置中配置
-//            giftView.removeCallbacks(mBean.getClearRun());
-//            final View finalGiftView = giftView;
-//            final BaseGiftBean finalMBean = mBean;
-//            Runnable run = new Runnable() {
-//                @Override
-//                public void run() {
-//                    removeGiftViewAnim(finalGiftView);
-//                }
-//            };
-//            giftView.postDelayed(run, mBean.getGiftExistTime());
-//            finalMBean.setClearRun(run);
                 mBean.setTheLatestRefreshTime(System.currentTimeMillis());
                 giftView.setTag(mBean);
                 ViewGroup vg = (ViewGroup) giftView.getParent();
@@ -348,6 +352,7 @@ public class RewardLayout extends LinearLayout {
             // 标记该giftview不可用
             view.setEnabled(false);
             if (adapter != null) {
+                adapter.onKickEnd((GiftIdentify) view.getTag());
                 outAnim = adapter.outAnim();
                 outAnim.setFillAfter(true);
                 outAnim.setAnimationListener(new Animation.AnimationListener() {
@@ -395,6 +400,7 @@ public class RewardLayout extends LinearLayout {
             // 标记该giftview不可用
             removeView.setEnabled(false);
             if (adapter != null) {
+                adapter.onComboEnd((GiftIdentify) removeView.getTag());
                 outAnim = adapter.outAnim();
                 outAnim.setFillAfter(true);
                 outAnim.setAnimationListener(new Animation.AnimationListener() {
@@ -679,7 +685,7 @@ public class RewardLayout extends LinearLayout {
     }
 
     /**
-     * 清礼物
+     * 清礼物并执行礼物连击结束回调
      */
     private void clearTask() {
         int count = getChildCount();
@@ -687,9 +693,9 @@ public class RewardLayout extends LinearLayout {
             final int index = i;
             ViewGroup viewG = (ViewGroup) getChildAt(index);
             for (int j = 0; j < viewG.getChildCount(); j++) {
-                View view = viewG.getChildAt(j);
+                final View view = viewG.getChildAt(j);
                 if (view.getTag() != null && view.isEnabled()) {
-                    GiftIdentify tag = (GiftIdentify) view.getTag();
+                    final GiftIdentify tag = (GiftIdentify) view.getTag();
                     long nowtime = System.currentTimeMillis();
                     long upTime = tag.getTheLatestRefreshTime();
                     if ((nowtime - upTime) >= tag.getTheGiftStay() && getActivity() != null) {
