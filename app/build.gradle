@@ -6,8 +6,8 @@ android {
         applicationId "com.zhangyf.reward"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 9
-        versionName "1.5.3"
+        versionCode 10
+        versionName "1.5.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
