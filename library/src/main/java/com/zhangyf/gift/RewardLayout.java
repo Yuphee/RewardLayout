@@ -44,8 +44,6 @@ public class RewardLayout extends LinearLayout {
     private int MAX_GIFT_COUNT;
     private int GIFT_ITEM_LAYOUT;
     private int latestIndex;
-    private Context mContext;
-    private WeakReference<Activity> mActivityReference;
     private int childWidth;
     private int childHeight;
     private List<GiftIdentify> beans;
@@ -181,8 +179,6 @@ public class RewardLayout extends LinearLayout {
     }
 
     private void init(Context context) {
-        mContext = context;
-        mActivityReference = new WeakReference<>((Activity) mContext);
         beans = new ArrayList<>();
         clearTask = new GiftInterface() {
             @Override
@@ -220,7 +216,7 @@ public class RewardLayout extends LinearLayout {
                     .getLayoutParams();
             int height = child.getMeasuredHeight() + lp.topMargin
                     + lp.bottomMargin;
-            FrameLayout linearLayout = new FrameLayout(mContext);
+            FrameLayout linearLayout = new FrameLayout(getContext());
             FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, height);
             linearLayout.setLayoutParams(params);
             addView(linearLayout);
@@ -301,7 +297,7 @@ public class RewardLayout extends LinearLayout {
      */
     private View getGiftView() {
         View view = null;
-        view = LayoutInflater.from(mContext).inflate(getGiftRes(), null);
+        view = LayoutInflater.from(getContext()).inflate(getGiftRes(), null);
         LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         view.setLayoutParams(lp);
         return view;
@@ -628,6 +624,7 @@ public class RewardLayout extends LinearLayout {
         clearer = null;
         taker = null;
         basket = null;
+        adapter = null;
     }
 
 
@@ -673,8 +670,8 @@ public class RewardLayout extends LinearLayout {
     }
 
     private Activity getActivity() {
-        if (mActivityReference != null) {
-            return mActivityReference.get();
+        if (getContext() != null) {
+            return (Activity) getContext();
         } else {
             return null;
         }
