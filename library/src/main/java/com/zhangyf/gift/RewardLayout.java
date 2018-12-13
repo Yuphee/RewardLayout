@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -165,7 +166,7 @@ public class RewardLayout extends LinearLayout {
         measureChild(child, widthMeasureSpec, heightMeasureSpec);
         MarginLayoutParams lp = (MarginLayoutParams) child
                 .getLayoutParams();
-        // 当前子空间实际占据的宽度
+        // 当前子空间实际占据的宽度,此处已用FrameLayout包裹，这里的margin≡0，
         childWidth = child.getMeasuredWidth() + lp.leftMargin
                 + lp.rightMargin;
         // 当前子空间实际占据的高度
@@ -174,8 +175,13 @@ public class RewardLayout extends LinearLayout {
 
         int totalHeight = childHeight * MAX_GIFT_COUNT;
         setMeasuredDimension((modeWidth == MeasureSpec.EXACTLY) ? sizeWidth
-                : childWidth, (modeHeight == MeasureSpec.EXACTLY) ? sizeHeight
-                : totalHeight);
+                : childWidth + getPaddingLeft() + getPaddingRight(), (modeHeight == MeasureSpec.EXACTLY) ? sizeHeight
+                : totalHeight + getPaddingTop() + getPaddingBottom());
+    }
+
+    private int dp2px(float dpVal) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                dpVal, getResources().getDisplayMetrics());
     }
 
     private void init(Context context) {
@@ -296,12 +302,11 @@ public class RewardLayout extends LinearLayout {
      * 从xml布局中加载礼物view
      */
     private View getGiftView() {
-        View view = null;
-        view = LayoutInflater.from(getContext()).inflate(getGiftRes(), null);
+        FrameLayout root = new FrameLayout(getContext());
         LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        view.setLayoutParams(lp);
-        return view;
-
+        root.setLayoutParams(lp);
+        LayoutInflater.from(getContext()).inflate(getGiftRes(), root,true);
+        return root;
     }
 
 
