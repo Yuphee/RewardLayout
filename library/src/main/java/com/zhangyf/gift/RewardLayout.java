@@ -109,11 +109,12 @@ public class RewardLayout extends LinearLayout {
 
         /**
          * 鉴别礼物唯一性，
+         *
          * @param o 已存在的礼物bean
          * @param t 新传入的礼物bean
          * @return 返回比对后的结果
          */
-        boolean checkUnique(T o,T t);
+        boolean checkUnique(T o, T t);
 
         T generateBean(T bean);
     }
@@ -128,7 +129,7 @@ public class RewardLayout extends LinearLayout {
 
     public RewardLayout(Context context) {
         super(context);
-        init(context);
+        init();
     }
 
     public RewardLayout(Context context, @Nullable AttributeSet attrs) {
@@ -136,7 +137,7 @@ public class RewardLayout extends LinearLayout {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RewardLayout);
         MAX_GIFT_COUNT = (int) a.getInteger(R.styleable.RewardLayout_max_gift, MAX_COUNT_DEFAULT);
         GIFT_ITEM_LAYOUT = a.getResourceId(R.styleable.RewardLayout_gift_item_layout, 0);
-        init(context);
+        init();
     }
 
     public RewardLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -144,7 +145,7 @@ public class RewardLayout extends LinearLayout {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RewardLayout);
         MAX_GIFT_COUNT = (int) a.getDimension(R.styleable.RewardLayout_max_gift, MAX_COUNT_DEFAULT);
         GIFT_ITEM_LAYOUT = a.getResourceId(R.styleable.RewardLayout_gift_item_layout, 0);
-        init(context);
+        init();
     }
 
     /**
@@ -156,11 +157,6 @@ public class RewardLayout extends LinearLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        // 获得它的父容器为它设置的测量模式和大小
-        int sizeWidth = MeasureSpec.getSize(widthMeasureSpec);
-        int sizeHeight = MeasureSpec.getSize(heightMeasureSpec);
-        int modeWidth = MeasureSpec.getMode(widthMeasureSpec);
-        int modeHeight = MeasureSpec.getMode(heightMeasureSpec);
 
         View child = getGiftView();
         measureChild(child, widthMeasureSpec, heightMeasureSpec);
@@ -173,18 +169,79 @@ public class RewardLayout extends LinearLayout {
         childHeight = child.getMeasuredHeight() + lp.topMargin
                 + lp.bottomMargin;
 
-        int totalHeight = childHeight * MAX_GIFT_COUNT;
-        setMeasuredDimension((modeWidth == MeasureSpec.EXACTLY) ? sizeWidth
-                : childWidth + getPaddingLeft() + getPaddingRight(), (modeHeight == MeasureSpec.EXACTLY) ? sizeHeight
-                : totalHeight + getPaddingTop() + getPaddingBottom());
+        int totalWidth = childWidth + getPaddingLeft() + getPaddingRight();
+        int totalHeight = childHeight * MAX_GIFT_COUNT + getPaddingTop() + getPaddingBottom();
+        setMeasuredDimension(measureWidth(widthMeasureSpec, totalWidth, child.getLayoutParams().width)
+                , measureHeight(heightMeasureSpec, totalHeight, child.getLayoutParams().height));
     }
 
-    private int dp2px(float dpVal) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                dpVal, getResources().getDisplayMetrics());
+    /**
+     * 测量宽度，结合item布局的宽参数
+     *
+     * @param measureSpec
+     * @param viewGroupWidth
+     * @param childLp
+     * @return
+     */
+    private int measureWidth(int measureSpec, int viewGroupWidth, int childLp) {
+        int result;
+        int specMode = MeasureSpec.getMode(measureSpec);
+        int specSize = MeasureSpec.getSize(measureSpec);
+        switch (specMode) {
+            case MeasureSpec.UNSPECIFIED:
+                result = specSize;
+                break;
+            case MeasureSpec.AT_MOST:
+                if (childLp == ViewGroup.LayoutParams.MATCH_PARENT) {
+                    result = specSize;
+                } else {
+                    result = Math.min(viewGroupWidth, specSize);
+                }
+                break;
+            case MeasureSpec.EXACTLY:
+                result = specSize;
+                break;
+            default:
+                result = specSize;
+                break;
+        }
+        return result;
     }
 
-    private void init(Context context) {
+    /**
+     * 测量高度，结合item布局的高参数
+     *
+     * @param measureSpec
+     * @param viewGroupHeight
+     * @param childLp
+     * @return
+     */
+    private int measureHeight(int measureSpec, int viewGroupHeight, int childLp) {
+        int result;
+        int specMode = MeasureSpec.getMode(measureSpec);
+        int specSize = MeasureSpec.getSize(measureSpec);
+        switch (specMode) {
+            case MeasureSpec.UNSPECIFIED:
+                result = specSize;
+                break;
+            case MeasureSpec.AT_MOST:
+                if (childLp == ViewGroup.LayoutParams.MATCH_PARENT) {
+                    result = specSize;
+                } else {
+                    result = Math.min(viewGroupHeight, specSize);
+                }
+                break;
+            case MeasureSpec.EXACTLY:
+                result = specSize;
+                break;
+            default:
+                result = specSize;
+                break;
+        }
+        return result;
+    }
+
+    private void init() {
         beans = new ArrayList<>();
         clearTask = new GiftInterface() {
             @Override
@@ -211,24 +268,19 @@ public class RewardLayout extends LinearLayout {
      * 向rewardlayout中添加MAX_GIFT_COUNT个子framelayout
      */
     @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        if (getChildCount() != 0) {
+            removeAllViews();
+        }
         for (int i = 0; i < MAX_GIFT_COUNT; i++) {
-            View child = getGiftView();
-            child.measure(
-                    MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
-                    MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED));
-            MarginLayoutParams lp = (MarginLayoutParams) child
-                    .getLayoutParams();
-            int height = child.getMeasuredHeight() + lp.topMargin
-                    + lp.bottomMargin;
             FrameLayout linearLayout = new FrameLayout(getContext());
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, height);
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(getMeasuredWidth() - getPaddingLeft() - getPaddingRight(),
+                    (getMeasuredHeight() - getPaddingTop() - getPaddingBottom()) / MAX_GIFT_COUNT);
             linearLayout.setLayoutParams(params);
             addView(linearLayout);
         }
     }
-
 
     /**
      * 外部调用方法，添加礼物view到rewardlayout中
@@ -241,7 +293,7 @@ public class RewardLayout extends LinearLayout {
         }
         GiftIdentify bean = null;
         for (GiftIdentify baseGiftBean : beans) {
-            if (adapter.checkUnique(baseGiftBean,sBean)) {
+            if (adapter.checkUnique(baseGiftBean, sBean)) {
                 bean = baseGiftBean;
             }
         }
@@ -303,9 +355,10 @@ public class RewardLayout extends LinearLayout {
      */
     private View getGiftView() {
         FrameLayout root = new FrameLayout(getContext());
-        LayoutParams lp = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        View view = LayoutInflater.from(getContext()).inflate(getGiftRes(), root, false);
+        LayoutParams lp = new LayoutParams(view.getLayoutParams().width, view.getLayoutParams().height);
         root.setLayoutParams(lp);
-        LayoutInflater.from(getContext()).inflate(getGiftRes(), root,true);
+        root.addView(view);
         return root;
     }
 
@@ -556,13 +609,13 @@ public class RewardLayout extends LinearLayout {
      * @return
      */
     private View findSameUserGiftView(GiftIdentify target) {
-        if(adapter == null) {
+        if (adapter == null) {
             return null;
         }
         for (int i = 0; i < getChildCount(); i++) {
             for (int j = 0; j < ((ViewGroup) getChildAt(i)).getChildCount(); j++) {
                 GiftIdentify rGiftBean = (GiftIdentify) ((ViewGroup) getChildAt(i)).getChildAt(j).getTag();
-                if(adapter.checkUnique(rGiftBean,target)) {
+                if (adapter.checkUnique(rGiftBean, target)) {
                     return ((ViewGroup) getChildAt(i)).getChildAt(j);
                 }
             }
@@ -755,7 +808,7 @@ public class RewardLayout extends LinearLayout {
 
         @Override
         public void run() {
-            if(mInterface != null) {
+            if (mInterface != null) {
                 mInterface.doSomething();
             }
         }
@@ -764,7 +817,7 @@ public class RewardLayout extends LinearLayout {
     /**
      * 礼物消费者
      */
-     public class GiftTaker implements Runnable {
+    public class GiftTaker implements Runnable {
 
         private String TAG = "TakeGifter";
 
@@ -776,7 +829,7 @@ public class RewardLayout extends LinearLayout {
 
         @Override
         public void run() {
-            if(mInterface != null) {
+            if (mInterface != null) {
                 mInterface.doSomething();
             }
         }
