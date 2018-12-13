@@ -62,7 +62,7 @@
         android:id="@+id/iv_gift_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
+        android:layout_marginLeft="30dp"
         android:src="@mipmap/hj"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@id/br"
