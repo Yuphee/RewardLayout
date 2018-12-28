@@ -156,4 +156,5 @@ Config
 感谢许同学提供的切图
 
 ## 赞赏
-![image](/screenshots/alipay.jpg) ![image](/screenshots/wechat_pay.jpg) ![image](/screenshots/wechat_reward.png)
+<"/screenshots/alipay.jpg" width="150" height="200"/><"/screenshots/wechat_pay.jpg" width="150" height="200"/><"/screenshots/wechat_reward.png" width="150" height="200"/>
+
