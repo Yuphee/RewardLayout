@@ -156,5 +156,5 @@ Config
 感谢许同学提供的切图
 
 ## 赞赏
-如果对大佬有用的话，赏杯下午茶吧。
+如果对大佬有用的话，赏杯下午茶吧。<br>
 ![image](/screenshots/alipay.png)![image](/screenshots/wechat_reward.png)
