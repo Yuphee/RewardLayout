@@ -156,4 +156,5 @@ Config
 感谢许同学提供的切图
 
 ## 赞赏
-![image](/screenshots/alipay.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/200)![image](/screenshots/wechat_pay.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/200)![image](/screenshots/wechat_reward.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/200)
+如果对大佬有用的话，赏杯下午茶吧。<br>
+![image](/screenshots/alipay.png)![image](/screenshots/wechat_reward.png)
