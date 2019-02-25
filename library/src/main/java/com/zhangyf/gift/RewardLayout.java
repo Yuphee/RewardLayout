@@ -138,6 +138,7 @@ public class RewardLayout extends LinearLayout {
         MAX_GIFT_COUNT = (int) a.getInteger(R.styleable.RewardLayout_max_gift, MAX_COUNT_DEFAULT);
         GIFT_ITEM_LAYOUT = a.getResourceId(R.styleable.RewardLayout_gift_item_layout, 0);
         init();
+        a.recycle();
     }
 
     public RewardLayout(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -146,6 +147,7 @@ public class RewardLayout extends LinearLayout {
         MAX_GIFT_COUNT = (int) a.getDimension(R.styleable.RewardLayout_max_gift, MAX_COUNT_DEFAULT);
         GIFT_ITEM_LAYOUT = a.getResourceId(R.styleable.RewardLayout_gift_item_layout, 0);
         init();
+        a.recycle();
     }
 
     /**
@@ -330,8 +332,10 @@ public class RewardLayout extends LinearLayout {
                     removeGiftViewAnim(findSameUserGiftView(list.get(0)));
                 }
                 addGiftViewAnim(mBean);
+                sBean.setTheLatestRefreshTime(mBean.getTheLatestRefreshTime());
             } else {
                 addGiftViewAnim(mBean);
+                sBean.setTheLatestRefreshTime(mBean.getTheLatestRefreshTime());
             }
 
         } else {
@@ -343,10 +347,55 @@ public class RewardLayout extends LinearLayout {
                     giftView = adapter.onUpdate(giftView, mBean);
                 }
                 mBean.setTheLatestRefreshTime(System.currentTimeMillis());
+                sBean.setTheLatestRefreshTime(mBean.getTheLatestRefreshTime());
                 giftView.setTag(mBean);
                 ViewGroup vg = (ViewGroup) giftView.getParent();
                 vg.setTag(mBean.getTheLatestRefreshTime());
             }
+        }
+    }
+
+    /**
+     * 手动更新礼物过期时间
+     *
+     * @param cBean
+     */
+    public void updateRefreshTime(GiftIdentify cBean) {
+        updateRefreshTime(cBean, 0);
+    }
+
+    /**
+     * 手动更新礼物过期时间
+     *
+     * @param cBean
+     * @param delay
+     */
+    public void updateRefreshTime(GiftIdentify cBean, long delay) {
+        if (adapter == null) {
+            throw new IllegalArgumentException("setAdapter first");
+        }
+        int count = getChildCount();
+        for (int i = 0; i < count; i++) {
+            final int index = i;
+            ViewGroup viewG = (ViewGroup) getChildAt(index);
+            for (int j = 0; j < viewG.getChildCount(); j++) {
+                final View view = viewG.getChildAt(j);
+                final GiftIdentify tag = (GiftIdentify) view.getTag();
+                if (tag != null && view.isEnabled()) {
+                    if (adapter.checkUnique(tag, cBean)) {
+                        if (delay == 0) {
+                            if (cBean.getTheLatestRefreshTime() != 0 && cBean.getTheLatestRefreshTime() > tag.getTheLatestRefreshTime()) {
+                                tag.setTheLatestRefreshTime(cBean.getTheLatestRefreshTime());
+                            } else {
+                                tag.setTheLatestRefreshTime(System.currentTimeMillis());
+                            }
+                        } else {
+                            tag.setTheLatestRefreshTime(tag.getTheLatestRefreshTime() + delay);
+                        }
+                    }
+                }
+            }
+
         }
     }
 
@@ -749,8 +798,8 @@ public class RewardLayout extends LinearLayout {
             ViewGroup viewG = (ViewGroup) getChildAt(index);
             for (int j = 0; j < viewG.getChildCount(); j++) {
                 final View view = viewG.getChildAt(j);
-                if (view.getTag() != null && view.isEnabled()) {
-                    final GiftIdentify tag = (GiftIdentify) view.getTag();
+                final GiftIdentify tag = (GiftIdentify) view.getTag();
+                if (tag != null && view.isEnabled()) {
                     long nowtime = System.currentTimeMillis();
                     long upTime = tag.getTheLatestRefreshTime();
                     if ((nowtime - upTime) >= tag.getTheGiftStay() && getActivity() != null) {

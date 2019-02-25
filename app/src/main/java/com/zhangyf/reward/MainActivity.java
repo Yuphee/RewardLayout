@@ -25,6 +25,7 @@ import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private TextView tvUpdate;
     private TextView tvSendzero;
     private TextView tvSendone;
     private TextView tvSendtwo;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void initViews() {
         rewardLayout = findViewById(R.id.llgiftcontent);
+        tvUpdate = findViewById(R.id.btn_update_tg_m);
         tvSendzero = findViewById(R.id.tvSendzero);
         tvSendone = findViewById(R.id.tvSendone);
         tvSendtwo = findViewById(R.id.tvSendtwo);
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tvSendanother = findViewById(R.id.tvSendanother);
         btnAutoSend = findViewById(R.id.btn_auto_send);
         btnAutoCancel = findViewById(R.id.btn_auto_cancel);
+        tvUpdate.setOnClickListener(this);
         tvSendzero.setOnClickListener(this);
         tvSendone.setOnClickListener(this);
         tvSendtwo.setOnClickListener(this);
@@ -65,13 +68,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void initData() {
-        bean0 = new SendGiftBean(1,1,"林喵喵","糖果",R.mipmap.tg,2700);
+        bean0 = new SendGiftBean(1, 1, "林喵喵", "糖果", R.mipmap.tg, 2700);
         bean0.setTheSendGiftSize(2);
-        bean1 = new SendGiftBean(1,1,"林喵喵","糖果",R.mipmap.tg,2700);
-        bean2 = new SendGiftBean(2,2,"马甲","666",R.mipmap.good,3000);
-        bean3 = new SendGiftBean(3,3,"小梦梦","小香蕉",R.mipmap.banana,2500);
-        bean4 = new SendGiftBean(4,4,"大枫哥","鱼丸",R.mipmap.yw,2000);
-        bean5 = new SendGiftBean(4,1,"大枫哥","糖果",R.mipmap.tg,2700);
+        bean1 = new SendGiftBean(1, 1, "林喵喵", "糖果", R.mipmap.tg, 2700);
+        bean2 = new SendGiftBean(2, 2, "马甲", "666", R.mipmap.good, 3000);
+        bean3 = new SendGiftBean(3, 3, "小梦梦", "小香蕉", R.mipmap.banana, 2500);
+        bean4 = new SendGiftBean(4, 4, "大枫哥", "鱼丸", R.mipmap.yw, 2000);
+        bean5 = new SendGiftBean(4, 1, "大枫哥", "糖果", R.mipmap.tg, 2700);
         giftList.add(bean1);
         giftList.add(bean2);
         giftList.add(bean3);
@@ -97,11 +100,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 TextView giftName = (TextView) view.findViewById(R.id.tv_gift_name);
 
                 // 初始化数据
-                giftNum.setText("x"+bean.getTheSendGiftSize());
+                giftNum.setText("x" + bean.getTheSendGiftSize());
                 bean.setTheGiftCount(bean.getTheSendGiftSize());
                 giftImage.setImageResource(bean.getGiftImg());
                 userName.setText(bean.getUserName());
-                giftName.setText("送出 "+bean.getGiftName());
+                giftName.setText("送出 " + bean.getGiftName());
                 return view;
             }
 
@@ -125,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void onKickEnd(SendGiftBean bean) {
-                Log.e("zyfff","onKickEnd:"+bean.getTheGiftId()+","+bean.getGiftName()+","+bean.getUserName()+","+bean.getTheGiftCount());
+                Log.e("zyfff", "onKickEnd:" + bean.getTheGiftId() + "," + bean.getGiftName() + "," + bean.getUserName() + "," + bean.getTheGiftCount());
             }
 
             @Override
@@ -189,8 +192,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btnAutoSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!isStart) {
-                    if(timer == null) {
+                if (!isStart) {
+                    if (timer == null) {
                         timer = new Timer();
                     }
                     isStart = true;
@@ -198,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         @Override
                         public void run() {
                             rewardLayout.put(giftList.get(new Random().nextInt(giftList.size())));
-                            Log.e("zyfff", "send count:"+count++);
+                            Log.e("zyfff", "send count:" + count++);
                         }
                     }, 0, 50);
                 }
@@ -218,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         super.onPause();
-        if(rewardLayout != null) {
+        if (rewardLayout != null) {
             rewardLayout.onPause();
         }
     }
@@ -226,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-        if(rewardLayout != null) {
+        if (rewardLayout != null) {
             rewardLayout.onResume();
         }
     }
@@ -234,10 +237,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(rewardLayout != null) {
+        if (rewardLayout != null) {
             rewardLayout.onDestroy();
         }
-        if(timer != null) {
+        if (timer != null) {
             timer.cancel();
             timer = null;
         }
@@ -245,8 +248,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             /*礼物1 林喵喵x2*/
+            case R.id.btn_update_tg_m:
+                rewardLayout.updateRefreshTime(bean1,2000);
+                break;
             case R.id.tvSendzero:
                 rewardLayout.put(bean0);
                 break;
@@ -269,6 +275,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             /*礼物1 枫哥*/
             case R.id.tvSendanother:
                 rewardLayout.put(bean5);
+                break;
+            default:
                 break;
         }
     }
