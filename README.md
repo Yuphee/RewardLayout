@@ -37,7 +37,7 @@ allprojects {
 **2.关于RewardLayout**<br>
 可自定义礼物item布局，动画，最大条数，每种礼物持续时间，继承BaseGiftBean实现自定义的SendGiftBean，并实现相应接口方法，可轻松实现自定义的效果；最大礼物数可在xml上指定或者代码直接定义，其它参数可以在自定义SendGiftBean中指定，具体接入请参考demo<br><br>
 **3.实践**<br>
-本库用在项目《椰趣》中，可以自行下载体验
+本库用在项目《椰趣》中，可以自行到各大应用市场下载体验
 
 ## Fast review
 Activity
@@ -126,6 +126,8 @@ Activity
     
    Just call ->
    rewardLayout.put(bean1);
+   //手动刷新礼物过期时间，防止被礼物回收线程回收，可用于其它需要增加礼物停留时间的需求。
+   rewardLayout.updateRefreshTime(bean1,2000);
 ```
 XML
  ```java
