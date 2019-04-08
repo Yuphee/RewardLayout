@@ -2,7 +2,7 @@
 仿斗鱼送礼物效果<br>
 本项目旨在提供实现参考，交流学习。<br>
 > 关于我，欢迎关注  
-  邮箱：437220638@qq.com<br>
+  邮箱:437220638@qq.com<br>
   有问题及时issue pr 或 email<br>
   如果对你有点帮助的话，点个star哦~
  
@@ -75,6 +75,18 @@ Activity
             @Override
             public boolean checkUnique(SendGiftBean o, SendGiftBean t) {
                 return o.getTheGiftId() == t.getTheGiftId() && o.getTheUserId() == t.getTheUserId();
+            }
+            
+            //礼物展示结束，可能由于送礼者过多，轨道被替换导致结束
+             @Override
+            public void onKickEnd(SendGiftBean bean) {
+                Log.e("zyf", "onKickEnd:" + bean.getTheGiftId() + "," + bean.getGiftName() + "," + bean.getUserName() + "," +   bean.getTheGiftCount());
+            }
+
+            //礼物连击结束,即被系统自动清理时回调
+            @Override
+            public void onComboEnd(SendGiftBean bean) {
+                Log.e("zyf","onComboEnd:"+bean.getTheGiftId()+","+bean.getGiftName()+","+bean.getUserName()+","+bean.getTheGiftCount());
             }
 
             @Override
