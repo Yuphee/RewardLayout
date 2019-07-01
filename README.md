@@ -23,12 +23,12 @@ allprojects {
  Add the dependency
   ```java
  dependencies {
-        implementation 'com.github.Yuphee:RewardLayout:1.0.5.9'
+        implementation 'com.github.Yuphee:RewardLayout:1.0.6'
 }
  ```
 
 ## Apk
-[Demo体验](/sample.apk)
+[Demo体验](https://www.pgyer.com/i6qA)
 
 ## Statement
 **1.关于直播间布局**<br>
@@ -153,7 +153,7 @@ Config
   以上配置已去除，全部参数有数据对象返回,数据对象必须继承BaseGiftBean，并实现相应接口，具体参考demo
  ```
 ## Todo
-**v1.6** 将会支持更多礼物替换规则<br>
+支持更多礼物替换规则<br>
  
 ## Fixed 
 **v1.0** 已改进不同礼物消失机制，采用postHandler及removeCallbacks去更新和执行删除时机，可以通过config自定义每种礼物不同的持续时间，同时已优化不同人对同种礼物的区分<br><br>
@@ -166,7 +166,7 @@ Config
 **v1.5.2** 修复内存泄漏<br><br>
 **v1.5.4** 增加送礼轨道被踢回调及系统判定结束连击回调<br><br>
 **v1.5.8** 增加手动刷新礼物过期时间<br><br>
-**v1.5.9** minsdk降为14,修改某些代码<br>
+**v1.6.0** minsdk降为14,修改某些代码<br>
 
 
 ## Thanks
