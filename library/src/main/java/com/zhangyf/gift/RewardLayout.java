@@ -286,7 +286,7 @@ public class RewardLayout extends LinearLayout {
      */
     private void showGift(GiftIdentify sBean) {
         if (adapter == null) {
-            throw new IllegalArgumentException("setAdapter first");
+            return;
         }
         GiftIdentify bean = null;
         for (GiftIdentify baseGiftBean : beans) {
