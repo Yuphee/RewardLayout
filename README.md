@@ -28,7 +28,7 @@ allprojects {
  ```
 
 ## Apk
-[Demo体验](/sample.apk)
+[Demo体验](https://www.pgyer.com/i6qA)
 
 ## Statement
 **1.关于直播间布局**<br>
