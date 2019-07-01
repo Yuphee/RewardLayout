@@ -1,13 +1,10 @@
 package com.zhangyf.gift;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +13,8 @@ import android.view.animation.AnimationSet;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-
 import com.zhangyf.gift.bean.GiftIdentify;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -479,14 +474,12 @@ public class RewardLayout extends LinearLayout {
 
                     }
                 });
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            view.startAnimation(outAnim);
-                        }
-                    });
-                }
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        view.startAnimation(outAnim);
+                    }
+                });
             }
 
         }
@@ -527,14 +520,12 @@ public class RewardLayout extends LinearLayout {
 
                     }
                 });
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            removeView.startAnimation(outAnim);
-                        }
-                    });
-                }
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        removeView.startAnimation(outAnim);
+                    }
+                });
 
             }
 
@@ -764,23 +755,14 @@ public class RewardLayout extends LinearLayout {
      * 将礼物放入队列
      *
      * @param bean
-     * @throws InterruptedException
      */
     public void put(GiftIdentify bean) {
         if (basket != null) {
             try {
                 basket.putGift(bean);
             } catch (InterruptedException e) {
-                Log.e(TAG, "IllegalStateException=" + e.getMessage());
+                Log.d(TAG, "IllegalStateException=" + e.getMessage());
             }
-        }
-    }
-
-    private Activity getActivity() {
-        if (getContext() != null) {
-            return (Activity) getContext();
-        } else {
-            return null;
         }
     }
 
@@ -802,8 +784,8 @@ public class RewardLayout extends LinearLayout {
                 if (tag != null && view.isEnabled()) {
                     long nowtime = System.currentTimeMillis();
                     long upTime = tag.getTheLatestRefreshTime();
-                    if ((nowtime - upTime) >= tag.getTheGiftStay() && getActivity() != null) {
-                        getActivity().runOnUiThread(new Runnable() {
+                    if ((nowtime - upTime) >= tag.getTheGiftStay()) {
+                        post(new Runnable() {
                             @Override
                             public void run() {
                                 removeGiftViewAnim(index);
@@ -820,11 +802,12 @@ public class RewardLayout extends LinearLayout {
      * 取礼物
      */
     private void takeTask() {
+        boolean interrupted = false;
         try {
             while (true) {
                 final GiftIdentify gift = basket.takeGift();
-                if (gift != null && getActivity() != null) {
-                    getActivity().runOnUiThread(new Runnable() {
+                if (gift != null) {
+                    post(new Runnable() {
                         @Override
                         public void run() {
                             showGift(gift);
@@ -833,14 +816,19 @@ public class RewardLayout extends LinearLayout {
                 }
             }
         } catch (InterruptedException e) {
-            Log.e(TAG, "InterruptedException=" + e.getMessage());
+            interrupted = true;
+            Log.d(TAG, "InterruptedException=" + e.getMessage());
             e.printStackTrace();
         } catch (IllegalStateException e) {
-            Log.e(TAG, "IllegalStateException=" + e.getMessage());
+            Log.d(TAG, "IllegalStateException=" + e.getMessage());
             e.printStackTrace();
         } catch (Exception e) {
-            Log.e(TAG, "Exception=" + e.getMessage());
+            Log.d(TAG, "Exception=" + e.getMessage());
             e.printStackTrace();
+        } finally {
+            if (interrupted) {
+                Thread.currentThread().interrupt();
+            }
         }
     }
 
@@ -898,12 +886,11 @@ public class RewardLayout extends LinearLayout {
          * 将礼物放入队列
          *
          * @param bean
-         * @throws InterruptedException
          */
         public void putGift(GiftIdentify bean) throws InterruptedException {
             //添加元素到队列，如果队列已满,线程进入等待，直到有空间继续生产
             queue.put(bean);
-            Log.e(TAG, "puted size:" + queue.size());
+            Log.d(TAG, "puted size:" + queue.size());
             //添加元素到队列，如果队列已满，抛出IllegalStateException异常，退出生产模式
 //        queue.add(bean);
             //添加元素到队列，如果队列已满或者说添加失败，返回false，否则返回true，继续生产
@@ -916,12 +903,11 @@ public class RewardLayout extends LinearLayout {
          * 从队列取出礼物
          *
          * @return
-         * @throws InterruptedException
          */
         public GiftIdentify takeGift() throws InterruptedException {
             //检索并移除队列头部元素，如果队列为空,线程进入等待，直到有新的数据加入继续消费
             GiftIdentify bean = queue.take();
-            Log.e(TAG, "taked size:" + queue.size());
+            Log.d(TAG, "taked size:" + queue.size());
             //检索并删除队列头部元素，如果队列为空，抛出异常，退出消费模式
 //        GiftIdentify bean = queue.remove();
             //检索并删除队列头部元素，如果队列为空，返回false，否则返回true，继续消费
