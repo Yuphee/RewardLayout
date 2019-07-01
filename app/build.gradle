@@ -4,10 +4,10 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.zhangyf.reward"
-        minSdkVersion 14
+        minSdkVersion 19
         targetSdkVersion 28
-        versionCode 16
-        versionName "1.5.9"
+        versionCode 17
+        versionName "1.6.0"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
