@@ -1,5 +1,5 @@
 [![](https://jitpack.io/v/Yuphee/RewardLayout.svg)](https://jitpack.io/#Yuphee/RewardLayout)	
-[![GitHub license](https://img.shields.io/github/license/Yuphee/RewardLayout.svg)](https://github.com/Yuphee/RewardLayout/blob/master/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/Yuphee/RewardLayout.svg?color=brightgreen)](https://github.com/Yuphee/RewardLayout/blob/master/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/Yuphee/RewardLayout.svg?color=%23ff69b4)](https://github.com/Yuphee/RewardLayout/stargazers)
 [![GitHub stars](https://img.shields.io/badge/API-14%2B-orange.svg)](https://developer.android.com/about/versions/android-4.0.html)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Yuphee/RewardLayout.svg)
