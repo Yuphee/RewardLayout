@@ -1,7 +1,10 @@
-<div align="left">
-<a href="https://jitpack.io/#Yuphee/RewardLayout">
-    <img src="https://jitpack.io/v/Yuphee/RewardLayout.svg">
-</a>	
+[![](https://jitpack.io/v/Yuphee/RewardLayout.svg)](https://jitpack.io/#Yuphee/RewardLayout)	
+[![GitHub license](https://img.shields.io/github/license/Yuphee/RewardLayout.svg)](https://github.com/Yuphee/RewardLayout/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/Yuphee/RewardLayout.svg?color=%23ff69b4)](https://github.com/Yuphee/RewardLayout/stargazers)
+[![GitHub stars](https://img.shields.io/badge/API-14%2B-orange.svg)](https://developer.android.com/about/versions/android-4.0.html)
+![GitHub last commit](https://img.shields.io/github/last-commit/Yuphee/RewardLayout.svg)
+<img src="https://img.shields.io/badge/Email-437220638%40qq.com-blue.svg">
+
 
 # RewardLayout
 仿斗鱼送礼物效果<br>
