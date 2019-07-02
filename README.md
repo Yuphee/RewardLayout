@@ -3,8 +3,8 @@
 [![GitHub stars](https://img.shields.io/github/stars/Yuphee/RewardLayout.svg?color=%23ff69b4)](https://github.com/Yuphee/RewardLayout/stargazers)
 [![GitHub stars](https://img.shields.io/badge/API-14%2B-orange.svg)](https://developer.android.com/about/versions/android-4.0.html)
 ![GitHub last commit](https://img.shields.io/github/last-commit/Yuphee/RewardLayout.svg)
-<img src="https://img.shields.io/badge/Email-437220638%40qq.com-blue.svg">
-<img src="https://img.shields.io/badge/Tip-Tranks%20For%20Reward-red.svg">
+<img src="https://img.shields.io/badge/email-437220638%40qq.com-blue.svg">
+<img src="https://img.shields.io/badge/Tip-thanks%20for%20reward-red.svg">
 
 
 # RewardLayout
