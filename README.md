@@ -1,5 +1,7 @@
-[![](https://jitpack.io/v/Yuphee/RewardLayout.svg)](https://jitpack.io/#Yuphee/RewardLayout)
-[![](https://jitpack.io/v/Yuphee/RewardLayout.svg)](https://jitpack.io/#Yuphee/RewardLayout)
+<div align="left">
+<a href="https://jitpack.io/#Yuphee/RewardLayout">
+    <img src="https://jitpack.io/v/Yuphee/RewardLayout.svg">
+</a>	
 
 # RewardLayout
 仿斗鱼送礼物效果<br>
