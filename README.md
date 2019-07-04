@@ -158,7 +158,7 @@ Config
                 .setGiftNames(new String[] {"糖果","666","小香蕉","大鱼丸"})
                 .setGiftRes(new int[] {R.mipmap.tg,R.mipmap.good,R.mipmap.banana,R.mipmap.yw})
                 .setStayTimes(new long[] {2000,2500,2700,5200});
-  以上配置已去除，全部参数有数据对象返回,数据对象必须继承BaseGiftBean，并实现相应接口，具体参考demo
+  以上配置已去除，全部参数有数据对象返回,数据对象必须继承BaseGiftBean，并实现相应接口，其它自定义配置都可以添加到自定义数据对象中，具体参考demo
  ```
 ## Todo
 支持更多礼物替换规则<br>
