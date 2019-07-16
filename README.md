@@ -1,8 +1,16 @@
+[![](https://jitpack.io/v/Yuphee/RewardLayout.svg)](https://jitpack.io/#Yuphee/RewardLayout)	
+[![GitHub license](https://img.shields.io/github/license/Yuphee/RewardLayout.svg?color=brightgreen)](https://github.com/Yuphee/RewardLayout/blob/master/LICENSE)
+[![GitHub stars](https://img.shields.io/github/stars/Yuphee/RewardLayout.svg?color=%23ff69b4)](https://github.com/Yuphee/RewardLayout/stargazers)
+[![GitHub stars](https://img.shields.io/badge/API-14%2B-orange.svg)](https://developer.android.com/about/versions/android-4.0.html)
+![GitHub last commit](https://img.shields.io/github/last-commit/Yuphee/RewardLayout.svg)
+<img src="https://img.shields.io/badge/email-437220638%40qq.com-blue.svg">
+<img src="https://img.shields.io/badge/Tip-thanks%20for%20reward-red.svg">
+
+
 # RewardLayout
 仿斗鱼送礼物效果<br>
 本项目旨在提供实现参考，交流学习。<br>
 > 关于我，欢迎关注  
-  邮箱:437220638@qq.com<br>
   有问题及时issue pr 或 email<br>
   如果对你有点帮助的话，点个star哦~
  
@@ -150,7 +158,7 @@ Config
                 .setGiftNames(new String[] {"糖果","666","小香蕉","大鱼丸"})
                 .setGiftRes(new int[] {R.mipmap.tg,R.mipmap.good,R.mipmap.banana,R.mipmap.yw})
                 .setStayTimes(new long[] {2000,2500,2700,5200});
-  以上配置已去除，全部参数有数据对象返回,数据对象必须继承BaseGiftBean，并实现相应接口，具体参考demo
+  以上配置已去除，全部参数有数据对象返回,数据对象必须继承BaseGiftBean，并实现相应接口，其它自定义配置都可以添加到自定义数据对象中，具体参考demo
  ```
 ## Todo
 支持更多礼物替换规则<br>
