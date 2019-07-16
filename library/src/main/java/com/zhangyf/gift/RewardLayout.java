@@ -67,10 +67,11 @@ public class RewardLayout extends LinearLayout {
          * 更新
          *
          * @param view
-         * @param bean
+         * @param o 原礼物对象
+         * @param t 新礼物对象
          * @return
          */
-        View onUpdate(View view, T bean);
+        View onUpdate(View view, T o, T t);
 
         /**
          * 礼物展示结束，可能由于送礼者过多，轨道被替换导致结束
@@ -322,15 +323,11 @@ public class RewardLayout extends LinearLayout {
                 // 根据加入时间排序所有child中giftview
                 Collections.sort(list);
                 if (list.size() > 0) {
-//                    latestIndex = list.get(0).getCurrentIndex();
-//                    removeGiftViewAnim(latestIndex);
                     removeGiftViewAnim(findSameUserGiftView(list.get(0)));
                 }
                 addGiftViewAnim(mBean);
-                sBean.setTheLatestRefreshTime(mBean.getTheLatestRefreshTime());
             } else {
                 addGiftViewAnim(mBean);
-                sBean.setTheLatestRefreshTime(mBean.getTheLatestRefreshTime());
             }
 
         } else {
@@ -339,10 +336,9 @@ public class RewardLayout extends LinearLayout {
                 // 相同礼物需要更新SendGiftSize
                 mBean.setTheSendGiftSize(sBean.getTheSendGiftSize());
                 if (adapter != null) {
-                    giftView = adapter.onUpdate(giftView, mBean);
+                    giftView = adapter.onUpdate(giftView, mBean, sBean);
                 }
                 mBean.setTheLatestRefreshTime(System.currentTimeMillis());
-                sBean.setTheLatestRefreshTime(mBean.getTheLatestRefreshTime());
                 giftView.setTag(mBean);
                 ViewGroup vg = (ViewGroup) giftView.getParent();
                 vg.setTag(mBean.getTheLatestRefreshTime());
@@ -415,17 +411,6 @@ public class RewardLayout extends LinearLayout {
         }
 
         mBean.setTheLatestRefreshTime(System.currentTimeMillis());
-
-        // 根据GiftExistTime 准时消失，根据GiftExistTime可在配置中配置
-//        final View finalGiftView = giftView;
-//        Runnable run = new Runnable() {
-//            @Override
-//            public void run() {
-//                removeGiftViewAnim(finalGiftView);
-//            }
-//        };
-//        finalGiftView.postDelayed(run, mBean.getGiftExistTime());
-//        mBean.setClearRun(run);
 
         giftView.setTag(mBean);
         // 标记该giftview可用

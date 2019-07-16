@@ -36,19 +36,6 @@ public class SendGiftBean extends BaseGiftBean{
      */
     private int giftSendSize = 1;
 
-//    /**
-//     * 礼物计数
-//     */
-//    private int giftCount;
-//    /**
-//     * 礼物刷新时间
-//     */
-//    private long latestRefreshTime;
-//    /**
-//     * 当前index
-//     */
-//    private int currentIndex;
-
     public SendGiftBean() {
     }
 

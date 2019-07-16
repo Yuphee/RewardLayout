@@ -109,20 +109,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             @Override
-            public View onUpdate(View view, SendGiftBean bean) {
+            public View onUpdate(View view, SendGiftBean o, SendGiftBean t) {
                 ImageView giftImage = (ImageView) view.findViewById(R.id.iv_gift_img);
                 TextView giftNum = (TextView) view.findViewById(R.id.tv_gift_amount);
 
-                int showNum = (Integer) bean.getTheGiftCount() + bean.getTheSendGiftSize();
+                int showNum = (Integer) o.getTheGiftCount() + o.getTheSendGiftSize();
                 // 刷新已存在的giftview界面数据
                 giftNum.setText("x" + showNum);
-                giftImage.setImageResource(bean.getGiftImg());
+                giftImage.setImageResource(o.getGiftImg());
                 // 数字刷新动画
                 new NumAnim().start(giftNum);
-                // 更新tag
-                bean.setTheGiftCount(showNum);
-                bean.setTheLatestRefreshTime(System.currentTimeMillis());
-                view.setTag(bean);
+                // 更新累计礼物数量
+                o.setTheGiftCount(showNum);
+                // 更新其它自定义字段
+//              o.setUserName(t.getUserName());
                 return view;
             }
 
