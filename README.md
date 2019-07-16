@@ -31,7 +31,7 @@ allprojects {
  Add the dependency
   ```java
  dependencies {
-        implementation 'com.github.Yuphee:RewardLayout:1.0.6'
+        implementation 'com.github.Yuphee:RewardLayout:1.0.6.1'
 }
  ```
 
@@ -64,7 +64,7 @@ Activity
             }
 
             @Override
-            public View onUpdate(View view, SendGiftBean bean) {
+            public View onUpdate(View view, SendGiftBean o，SendGiftBean t) {
                 //参考demo
                 return view;
             }
@@ -174,7 +174,8 @@ Config
 **v1.5.2** 修复内存泄漏<br><br>
 **v1.5.4** 增加送礼轨道被踢回调及系统判定结束连击回调<br><br>
 **v1.5.8** 增加手动刷新礼物过期时间<br><br>
-**v1.6.0** minsdk降为14,修改某些代码<br>
+**v1.6.0** minsdk降为14,修改某些代码<br><br>
+**v1.6.1** 修改礼物更新回调，返回新添加进去的礼物对象,tag更新内部完成，如需要更新原已展示对象的数据需自行手动更新<br>
 
 
 ## Thanks
