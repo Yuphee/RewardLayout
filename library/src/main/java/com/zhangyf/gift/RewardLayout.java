@@ -244,7 +244,11 @@ public class RewardLayout extends LinearLayout {
         clearTask = new GiftInterface() {
             @Override
             public void doSomething() {
-                clearTask();
+                try {
+                    clearTask();
+                } catch (Exception e) {
+                    Log.d(TAG, "clearException=" + e.getMessage());
+                }
             }
         };
         takeTask = new GiftInterface() {
@@ -758,24 +762,28 @@ public class RewardLayout extends LinearLayout {
     /**
      * 清礼物并执行礼物连击结束回调
      */
-    private void clearTask() {
+    private void clearTask(){
         int count = getChildCount();
         for (int i = 0; i < count; i++) {
             final int index = i;
             ViewGroup viewG = (ViewGroup) getChildAt(index);
             for (int j = 0; j < viewG.getChildCount(); j++) {
                 final View view = viewG.getChildAt(j);
-                final GiftIdentify tag = (GiftIdentify) view.getTag();
-                if (tag != null && view.isEnabled()) {
-                    long nowtime = System.currentTimeMillis();
-                    long upTime = tag.getTheLatestRefreshTime();
-                    if ((nowtime - upTime) >= tag.getTheGiftStay()) {
-                        post(new Runnable() {
-                            @Override
-                            public void run() {
-                                removeGiftViewAnim(index);
-                            }
-                        });
+                // 可能判断完获取的时候还是为空,保底try catch，如果改用handler postDelay去倒计时，频繁的取消，
+                // 开始,维护每个倒计时，修改时间,也会很麻烦，暂时先这么处理，有什么改进方案，欢迎pr o_o!!!
+                if(view != null) {
+                    final GiftIdentify tag = (GiftIdentify) view.getTag();
+                    if (tag != null && view.isEnabled()) {
+                        long nowtime = System.currentTimeMillis();
+                        long upTime = tag.getTheLatestRefreshTime();
+                        if ((nowtime - upTime) >= tag.getTheGiftStay()) {
+                            post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    removeGiftViewAnim(index);
+                                }
+                            });
+                        }
                     }
                 }
             }
@@ -900,6 +908,17 @@ public class RewardLayout extends LinearLayout {
             //检索并删除队列头部元素，如果队列为空，则等待指定时间，成功返回true，否则返回false，继续消费
 //        GiftIdentify bean = queue.poll(3, TimeUnit.SECONDS);
             return bean;
+        }
+    }
+
+    public class ChildRemovedException extends RuntimeException {
+
+        public ChildRemovedException() {
+            super();
+        }
+
+        public ChildRemovedException(String message) {
+            super(message);
         }
     }
 }
