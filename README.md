@@ -31,7 +31,7 @@ allprojects {
  Add the dependency
   ```java
  dependencies {
-        implementation 'com.github.Yuphee:RewardLayout:1.0.6'
+        implementation 'com.github.Yuphee:RewardLayout:1.0.6.1'
 }
  ```
 
@@ -64,7 +64,7 @@ Activity
             }
 
             @Override
-            public View onUpdate(View view, SendGiftBean bean) {
+            public View onUpdate(View view, SendGiftBean o，SendGiftBean t) {
                 //参考demo
                 return view;
             }
@@ -161,7 +161,7 @@ Config
   以上配置已去除，全部参数有数据对象返回,数据对象必须继承BaseGiftBean，并实现相应接口，其它自定义配置都可以添加到自定义数据对象中，具体参考demo
  ```
 ## Todo
-支持更多礼物替换规则<br>
+支持更多礼物替换规则（如贵重礼物展示优先，总价值礼物展示优先，最近最新优先，组合策略等）<br>
  
 ## Fixed 
 **v1.0** 已改进不同礼物消失机制，采用postHandler及removeCallbacks去更新和执行删除时机，可以通过config自定义每种礼物不同的持续时间，同时已优化不同人对同种礼物的区分<br><br>
@@ -174,7 +174,8 @@ Config
 **v1.5.2** 修复内存泄漏<br><br>
 **v1.5.4** 增加送礼轨道被踢回调及系统判定结束连击回调<br><br>
 **v1.5.8** 增加手动刷新礼物过期时间<br><br>
-**v1.6.0** minsdk降为14,修改某些代码<br>
+**v1.6.0** minsdk降为14,修改某些代码<br><br>
+**v1.6.1** 修改礼物更新回调，返回新添加进去的礼物对象,tag更新内部完成，如需要更新原已展示对象的数据需自行手动更新<br>
 
 
 ## Thanks
