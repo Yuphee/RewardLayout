@@ -165,7 +165,7 @@ XML
 **v1.5.8** 增加手动刷新礼物过期时间<br><br>
 **v1.6.0** minsdk降为14,修改某些代码<br><br>
 **v1.6.1** 修改礼物更新回调，返回新添加进去的礼物对象,tag更新内部完成，如需要更新原已展示对象的数据需自行手动更新<br><br>
-**v1.6.2** 修复礼物轨道概率不消失问题 见[issue](https://github.com/Yuphee/RewardLayout/issues/6)<br>
+**v1.6.2** 修复礼物轨道概率不消失问题 见 [issue#6](https://github.com/Yuphee/RewardLayout/issues/6)<br>
 
 
 ## Thanks
