@@ -66,6 +66,7 @@ Activity
             @Override
             public View onUpdate(View view, SendGiftBean o，SendGiftBean t) {
                 //参考demo
+                o返回的数据对象为Rewardlayout内部存储过的该礼物的数据对象，t返回的对象为每次put进去的新对象
                 return view;
             }
 
