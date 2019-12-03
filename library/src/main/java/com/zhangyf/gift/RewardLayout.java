@@ -610,21 +610,22 @@ public class RewardLayout extends LinearLayout {
      */
     private void addChildGift(View view) {
         for (int i = 0; i < getChildCount(); i++) {
-            if (((ViewGroup) getChildAt(i)).getChildCount() == 0) {
-                ((ViewGroup) getChildAt(i)).addView(view);
-                getChildAt(i).setTag(((GiftIdentify) view.getTag()).getTheLatestRefreshTime());
+            ViewGroup itemGroup = (ViewGroup) getChildAt(i);
+            if (itemGroup.getChildCount() == 0) {
+                itemGroup.addView(view);
+                itemGroup.setTag(((GiftIdentify) view.getTag()).getTheLatestRefreshTime());
                 break;
             } else {
                 boolean isAllCancel = true;
-                for (int j = 0; j < ((ViewGroup) getChildAt(i)).getChildCount(); j++) {
-                    if (((ViewGroup) getChildAt(i)).getChildAt(j).isEnabled()) {
+                for (int j = 0; j < itemGroup.getChildCount(); j++) {
+                    if (itemGroup.getChildAt(j).isEnabled()) {
                         isAllCancel = false;
                         break;
                     }
                 }
                 if (isAllCancel) {
-                    ((ViewGroup) getChildAt(i)).addView(view);
-                    getChildAt(i).setTag(((GiftIdentify) view.getTag()).getTheLatestRefreshTime());
+                    itemGroup.addView(view);
+                    itemGroup.setTag(((GiftIdentify) view.getTag()).getTheLatestRefreshTime());
                     break;
                 }
             }
@@ -642,10 +643,11 @@ public class RewardLayout extends LinearLayout {
             return null;
         }
         for (int i = 0; i < getChildCount(); i++) {
-            for (int j = 0; j < ((ViewGroup) getChildAt(i)).getChildCount(); j++) {
-                GiftIdentify rGiftBean = (GiftIdentify) ((ViewGroup) getChildAt(i)).getChildAt(j).getTag();
-                if (adapter.checkUnique(rGiftBean, target)) {
-                    return ((ViewGroup) getChildAt(i)).getChildAt(j);
+            ViewGroup itemGroup = (ViewGroup) getChildAt(i);
+            for (int j = 0; j < itemGroup.getChildCount(); j++) {
+                GiftIdentify rGiftBean = (GiftIdentify) itemGroup.getChildAt(j).getTag();
+                if (adapter.checkUnique(rGiftBean, target) && itemGroup.getChildAt(j).isEnabled()) {
+                    return itemGroup.getChildAt(j);
                 }
             }
         }
@@ -660,8 +662,9 @@ public class RewardLayout extends LinearLayout {
     private int getCurrentGiftCount() {
         int count = 0;
         for (int i = 0; i < getChildCount(); i++) {
-            for (int j = 0; j < ((ViewGroup) getChildAt(i)).getChildCount(); j++) {
-                if (((ViewGroup) getChildAt(i)).getChildAt(j).isEnabled() == true) {
+            ViewGroup itemGroup = (ViewGroup) getChildAt(i);
+            for (int j = 0; j < itemGroup.getChildCount(); j++) {
+                if (itemGroup.getChildAt(j).isEnabled()) {
                     count++;
                 }
             }
