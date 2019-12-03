@@ -31,7 +31,7 @@ allprojects {
  Add the dependency
   ```java
  dependencies {
-        implementation 'com.github.Yuphee:RewardLayout:1.0.6.1'
+        implementation 'com.github.Yuphee:RewardLayout:1.0.6.2'
 }
  ```
 
@@ -66,6 +66,7 @@ Activity
             @Override
             public View onUpdate(View view, SendGiftBean o，SendGiftBean t) {
                 //参考demo
+                o返回的数据对象为Rewardlayout内部存储过的该礼物的数据对象，t返回的对象为每次put进去的新对象
                 return view;
             }
 
@@ -149,17 +150,6 @@ XML
         app:gift_item_layout="@layout/gift_animation_item"
         android:orientation="vertical" />
 ```
-Config
- ```java
-  @Deprecated
-  GiftConfig.getInstance()
-                .setGiftCount(4)
-                .setGiftIds(new int[] {1,2,3,4})
-                .setGiftNames(new String[] {"糖果","666","小香蕉","大鱼丸"})
-                .setGiftRes(new int[] {R.mipmap.tg,R.mipmap.good,R.mipmap.banana,R.mipmap.yw})
-                .setStayTimes(new long[] {2000,2500,2700,5200});
-  以上配置已去除，全部参数有数据对象返回,数据对象必须继承BaseGiftBean，并实现相应接口，其它自定义配置都可以添加到自定义数据对象中，具体参考demo
- ```
 ## Todo
 支持更多礼物替换规则（如贵重礼物展示优先，总价值礼物展示优先，最近最新优先，组合策略等）<br>
  
@@ -175,7 +165,8 @@ Config
 **v1.5.4** 增加送礼轨道被踢回调及系统判定结束连击回调<br><br>
 **v1.5.8** 增加手动刷新礼物过期时间<br><br>
 **v1.6.0** minsdk降为14,修改某些代码<br><br>
-**v1.6.1** 修改礼物更新回调，返回新添加进去的礼物对象,tag更新内部完成，如需要更新原已展示对象的数据需自行手动更新<br>
+**v1.6.1** 修改礼物更新回调，返回新添加进去的礼物对象,tag更新内部完成，如需要更新原已展示对象的数据需自行手动更新<br><br>
+**v1.6.2** 修复礼物轨道概率不消失问题 见 [issue#6](https://github.com/Yuphee/RewardLayout/issues/6)<br>
 
 
 ## Thanks
