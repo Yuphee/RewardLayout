@@ -31,7 +31,7 @@ allprojects {
  Add the dependency
   ```java
  > dependencies {
- >       implementation 'com.github.Yuphee:RewardLayout:1.0.6.3'
+ >       implementation 'com.github.Yuphee:RewardLayout:[![](https://jitpack.io/v/Yuphee/RewardLayout.svg)](https://jitpack.io/#Yuphee/RewardLayout)	'
  > }
  ```
 
