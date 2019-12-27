@@ -30,10 +30,10 @@ allprojects {
  ```
  Add the dependency
   ```java
- > dependencies {
- >       implementation 'com.github.Yuphee:RewardLayout:[![](https://jitpack.io/v/Yuphee/RewardLayout.svg)](https://jitpack.io/#Yuphee/RewardLayout)	'
- > }
- ```
+     dependencies {
+        implementation 'com.github.Yuphee:RewardLayout:>[![](https://jitpack.io/v/Yuphee/RewardLayout.svg)](https://jitpack.io/#Yuphee/RewardLayout)	>'
+     }
+  ```
 
 ## Apk
 [Demo体验](https://www.pgyer.com/i6qA)
