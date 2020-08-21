@@ -30,10 +30,10 @@ allprojects {
  ```
  Add the dependency
   ```java
- dependencies {
+     dependencies {
         implementation 'com.github.Yuphee:RewardLayout:1.0.6.3'
-}
- ```
+     }
+  ```
 
 ## Apk
 [Demo体验](https://www.pgyer.com/i6qA)
