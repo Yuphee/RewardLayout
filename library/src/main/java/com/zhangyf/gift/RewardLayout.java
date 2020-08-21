@@ -37,6 +37,8 @@ public class RewardLayout extends LinearLayout {
 
     public static final int MAX_COUNT_DEFAULT = 3;
     public static final int MAX_THREAD = 1;
+    public static final int MIN_CLEAR_TIME = 50;
+    private int MIN_TAKE_TIME = 200;
     private int MAX_GIFT_COUNT;
     private int GIFT_ITEM_LAYOUT;
     private int latestIndex;
@@ -46,7 +48,7 @@ public class RewardLayout extends LinearLayout {
     private GiftAdapter adapter;
     private AnimationSet outAnim = null;
     private ScheduledExecutorService clearService;
-    private ExecutorService takeService;
+    private ScheduledExecutorService takeService;
     private GiftClearer clearer;
     private GiftTaker taker;
     private GiftBasket basket;
@@ -261,9 +263,21 @@ public class RewardLayout extends LinearLayout {
         basket = new GiftBasket();
         taker = new GiftTaker(takeTask);
         clearService = Executors.newScheduledThreadPool(MAX_THREAD);
-        takeService = Executors.newFixedThreadPool(MAX_THREAD);
+        takeService = Executors.newScheduledThreadPool(MAX_THREAD);
         startClearService();
         startTakeGiftService();
+    }
+
+    public int getMIN_TAKE_TIME() {
+        return MIN_TAKE_TIME;
+    }
+
+    /**
+     * 设置最小展示礼物时间（不要设置过小的值，太小的时间UI显示不清楚也没有意义）
+     * @param MIN_TAKE_TIME
+     */
+    public void setMIN_TAKE_TIME(int MIN_TAKE_TIME) {
+        this.MIN_TAKE_TIME = MIN_TAKE_TIME;
     }
 
     /**
@@ -527,10 +541,10 @@ public class RewardLayout extends LinearLayout {
      */
     private void startClearService() {
         if (!clearService.isShutdown()) {
-            clearService.scheduleWithFixedDelay(clearer, 0, 20, TimeUnit.MILLISECONDS);
+            clearService.scheduleWithFixedDelay(clearer, 0, MIN_CLEAR_TIME, TimeUnit.MILLISECONDS);
         } else {
             clearService = Executors.newScheduledThreadPool(MAX_THREAD);
-            clearService.scheduleWithFixedDelay(clearer, 0, 20, TimeUnit.MILLISECONDS);
+            clearService.scheduleWithFixedDelay(clearer, 0, MIN_CLEAR_TIME, TimeUnit.MILLISECONDS);
         }
     }
 
@@ -538,11 +552,14 @@ public class RewardLayout extends LinearLayout {
      * 不断取礼物队列
      */
     private void startTakeGiftService() {
+        if(MIN_TAKE_TIME < MIN_CLEAR_TIME) {
+            throw new IllegalArgumentException("Illegal MIN_TAKE_TIME");
+        }
         if (!takeService.isShutdown()) {
-            takeService.execute(taker);
+            takeService.scheduleWithFixedDelay(taker, 0, MIN_TAKE_TIME, TimeUnit.MILLISECONDS);
         } else {
-            takeService = Executors.newFixedThreadPool(MAX_THREAD);
-            takeService.execute(taker);
+            takeService = Executors.newScheduledThreadPool(MAX_THREAD);
+            takeService.scheduleWithFixedDelay(taker, 0, MIN_TAKE_TIME, TimeUnit.MILLISECONDS);
         }
     }
 
@@ -695,7 +712,7 @@ public class RewardLayout extends LinearLayout {
                 startTakeGiftService();
             }
         } else {
-            takeService = Executors.newFixedThreadPool(MAX_THREAD);
+            takeService = Executors.newScheduledThreadPool(MAX_THREAD);
             startTakeGiftService();
         }
     }
@@ -800,16 +817,14 @@ public class RewardLayout extends LinearLayout {
     private void takeTask() {
         boolean interrupted = false;
         try {
-            while (true) {
-                final GiftIdentify gift = basket.takeGift();
-                if (gift != null) {
-                    post(new Runnable() {
-                        @Override
-                        public void run() {
-                            showGift(gift);
-                        }
-                    });
-                }
+            final GiftIdentify gift = basket.takeGift();
+            if (gift != null) {
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        showGift(gift);
+                    }
+                });
             }
         } catch (InterruptedException e) {
             interrupted = true;

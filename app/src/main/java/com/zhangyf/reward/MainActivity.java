@@ -10,6 +10,7 @@ import android.view.animation.AnimationSet;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.zhangyf.gift.RewardLayout;
 import com.zhangyf.gift.bean.GiftIdentify;
@@ -203,14 +204,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             rewardLayout.put(giftList.get(new Random().nextInt(giftList.size())));
                             Log.e("zyfff", "send count:" + count++);
                         }
-                    }, 0, 50);
+                    }, 0, 100);
                 }
             }
         });
         btnAutoCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                timer.cancel();
+                if(timer != null) {
+                    timer.cancel();
+                    Toast.makeText(MainActivity.this,"队列任有数据",Toast.LENGTH_SHORT).show();
+                }
                 timer = null;
                 isStart = false;
             }
