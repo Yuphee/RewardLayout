@@ -175,4 +175,6 @@ XML
 
 ## 赞赏
 如果对大佬有用的话，赏杯下午茶吧。<br>
+赞赏列表鸣谢<br>
+大不六<br>
 ![image](/screenshots/alipay.png)![image](/screenshots/wechat_reward.png)
